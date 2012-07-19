@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">DesktopUI</string>
+    <string name="srch">Поиск</string>
+    <string name="sett">Настроики</string>
+    <string name="exit_m">Выйти</string>
+    <string name="exit_al">Выйти?</string>
+    <string name="no">Нет</string>
+    <string name="yes">Да</string>
+    <string name="save">Сохранить</string>
+    <string name="cancel">Отмена</string>
+    <string name="apps">Приложения</string>
+	<string name="mysett_m">Параметры</string>
+	<string name="mysett">-----Параметры-----</string>
+	<string name="mst_itmsize">Размер иконки</string>
+	<string name="mst_fntsize">Размер шрифта</string>
+	<string name="mst_bmp_quality">Высокое качество</string>
+	<string name="mst_reset">Сбросить всё</string>
+    <string name="edit">Редактирование</string>
+    <string name="edit_n">Имя</string>
+    <string name="edit_p1">Параметр 1</string>
+    <string name="edit_p2">Параметр 2</string>
+    <string name="edit_p3">Параметр 3</string>
+</resources>
