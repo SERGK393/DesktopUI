@@ -39,6 +39,7 @@ public class IconCache {
 
     private static class CacheEntry {
         public Bitmap icon;
+//		public Bitmap small;
     }
 
     private final Bitmap mDefaultIcon;
@@ -87,7 +88,8 @@ public class IconCache {
      * Empty out the cache.
      */
     public void flush() {
-		Log.d(LOG_TAG,"Flush");
+		Log.d(LOG_TAG,"Flush "
+		      +mCache.size()+" objects");
         synchronized (mCache) {
             mCache.clear();
         }
@@ -135,9 +137,16 @@ public class IconCache {
 			{
 				entry.icon = Utilities.createIconBitmap(mPackageManager.getActivityIcon(componentName), mContext);
 			}
-			catch (PackageManager.NameNotFoundException e)
+			catch (Exception e)
 			{}
-        }
+        }else if(entry.icon.isRecycled()){
+			try
+			{
+				entry.icon.createBitmap(Utilities.createIconBitmap(mPackageManager.getActivityIcon(componentName), mContext));
+			}
+			catch (Exception e)
+			{}
+		}
         return entry;
     }
 }

@@ -2,6 +2,7 @@ package ru.k3.desktopui;
 
 import android.content.*;
 import android.graphics.*;
+import android.os.*;
 import android.view.*;
 import java.util.*;
 
@@ -55,9 +56,9 @@ public class DeskView extends View
 	}
 	
 	public void clear(){
-		Log.d(LOG_TAG,"Clearing");
+		Log.d(LOG_TAG,"Clearing "
+		      +itm.size()+" items");
 		itm.clear();
-		iCache.flush();
 		sw=sh=0;
 		initTableSize();
 	}
@@ -73,10 +74,10 @@ public class DeskView extends View
 	public void correctTableSize(){
 		sw=sh=0;
 		for(Obj it:itm){
-			if(it.getXPos()+is>sw)
-				sw=it.getXPos()+is;
-			if(it.getYPos()+is+fh>sh+5)
-				sh=it.getYPos()+is+fh+5;
+			if(it.getAbsoluteX2()>sw)
+				sw=it.getAbsoluteX2();
+			if(it.getAbsoluteY2()>sh)
+				sh=it.getAbsoluteY2();
 		}
 		initTableSize();
 	}
@@ -97,10 +98,10 @@ public class DeskView extends View
 		mty=getScrollY()+(int)ev.getY()-it.getYPos();
 	}
 	
-	public void addItem(String title,ComponentName comp,int x,int y){
-		itm.add(new Obj(new Rect(x,y,x+is,y+is),iCache,comp,title,fh));
+	public void addItem(int type,String title,String p1,String p2,int x,int y){
+		itm.add(new Obj(new Rect(x,y,x+is,y+is),iCache,type,title,p1,p2,fh));
 		if(sw<x+is)sw=x+is; if(sh<y+is+fh+5)sh=y+is+fh+5;
-	    postInvalidate();
+//	    postInvalidate();
 	}
 	
 	private boolean check(MotionEvent ev,int i){
@@ -109,6 +110,7 @@ public class DeskView extends View
 	
 	@Override
 	public void onDraw(Canvas c){
+		super.onDraw(c);
 		for (Obj it:itm) it.draw(c);
 	}
 	
@@ -147,16 +149,16 @@ public class DeskView extends View
 				int newx,newy;
 				newx = getScrollX();
 				newy = getScrollY();
-				if (it.getXPos()+is > getScrollX()+getWidth()) newx=it.getXPos()+is-getWidth();
+				if (it.getAbsoluteX2() > getScrollX()+getWidth()) newx=it.getAbsoluteX2()-getWidth();
 				else if(it.getXPos()<getScrollX())newx=it.getXPos();
-				if (it.getYPos()+is+fh+5 > getScrollY()+getHeight()) newy=it.getYPos()+is+fh+5-getHeight();
+				if (it.getAbsoluteY2() > getScrollY()+getHeight()) newy=it.getAbsoluteY2()-getHeight();
 				else if(it.getYPos()<getScrollY())newy=it.getYPos();
 				if(newx!=getScrollX()||newy!=getScrollY()){
-					sw=it.getXPos()+is;
+					sw=it.getAbsoluteX2();
 					if(sw<sw1)sw=sw1;
-					sh=it.getYPos()+is;
+					sh=it.getAbsoluteY2();
 					if(sh<sh1)sh=sh1;
-					scrollBy((newx-getScrollX())/2,(newy-getScrollY())/2);
+					scrollBy((newx-getScrollX())/3,(newy-getScrollY())/3);
 				}
 				clk.onMoveItem(it,(int)ev.getX()+getScrollX()-mtx,(int)ev.getY()+getScrollY()-mty);
 				invalidate();
@@ -182,12 +184,16 @@ public class DeskView extends View
 			 awakenScrollBars(scroller.getDuration());
 			 }*/
             int newScrollX = getScrollX();
-            if (getScrollX() < 0) newScrollX = 0;
-            else if (getScrollX() > sw - getWidth()) newScrollX = sw- getWidth();
+			if(sw>getWidth()){
+                if (getScrollX() < 0) newScrollX = 0;
+                else if (getScrollX() > sw - getWidth()) newScrollX = sw- getWidth();
+			}
 
             int newScrollY = getScrollY();
-            if (getScrollY() < 0) newScrollY = 0;
-            else if (getScrollY() > sh - getHeight()) newScrollY = sh - getHeight();
+            if(sh>getHeight()){
+			    if (getScrollY() < 0) newScrollY = 0;
+                else if (getScrollY() > sh - getHeight()) newScrollY = sh - getHeight();
+			}
 
 			if ((newScrollX != getScrollX()) || (newScrollY != getScrollY()))
             {
@@ -239,8 +245,8 @@ public class DeskView extends View
 			for (int i=0;i<itm.size();i++) itm.get(i).setClicked(false);
 			
             boolean scrollOut = ((getScrollX() < -10) || (getScrollX() > sw-getWidth()+10) || (getScrollY() < -10) || (getScrollY() > sh-getHeight()+10));
-            int distX=scrollOut?(int)distanceX/2:(int)distanceX;
-			int distY=scrollOut?(int)distanceY/2:(int)distanceY;
+            int distX=sw>getWidth()?(scrollOut?(int)distanceX/2:(int)distanceX):0;
+			int distY=sh>getHeight()?(scrollOut?(int)distanceY/2:(int)distanceY):0;
 			
 			scrollBy(distX, distY);
 			return true;

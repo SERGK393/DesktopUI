@@ -2,7 +2,7 @@ package ru.k3.desktopui;
 
 import ru.k3.desktopui.db.*;
 
-import android.annotation.SuppressLint;
+import java.util.*;
 import android.app.*;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -10,6 +10,8 @@ import android.widget.*;
 import android.content.*;
 import android.net.*;
 import android.util.*;
+import android.content.pm.*;
+import android.graphics.drawable.*;
 import android.content.res.Configuration;
 import android.os.Handler;
 import android.os.Message;
@@ -26,6 +28,7 @@ public class DesktopUI extends Activity implements DeskView.Events
 	private static final int DIALOG_SETTINGS=0x01;
 	private static final int DIALOG_EDIT=0x10;
 	private static boolean CLOSE=false;
+//	private static boolean FIRSTLOAD=true;
 	private static int TOUCHX,TOUCHY;
 
 	private Cursor mysett;
@@ -34,12 +37,12 @@ public class DesktopUI extends Activity implements DeskView.Events
 	private ImageView wall;
 
 	private static final String[] scontent=new String[]{DbManager.ICN_SZ,DbManager.FNT_SZ,DbManager.BMP_Q};
-	private static final String[] itcontent=new String[]{DbManager._ID,DbManager.NAME,DbManager.PARAM_1,DbManager.PARAM_2,DbManager.PARAM_3, DbManager.POSX,DbManager.POSY};
+	private static final String[] itcontent=new String[]{DbManager._ID,DbManager.TYPE,DbManager.NAME,DbManager.PARAM_1,DbManager.PARAM_2,DbManager.PARAM_3, DbManager.POSX,DbManager.POSY};
 
     @Override
-    public void onCreate(Bundle savedInstanceState)
+    public void onCreate(Bundle state)
 	{
-		super.onCreate(savedInstanceState);
+		super.onCreate(state);
 		Log.d(LOG_TAG,"-------STARTED-------");
 
         createActionBar();
@@ -48,16 +51,27 @@ public class DesktopUI extends Activity implements DeskView.Events
         setContentView(R.layout.main);
         dv = (DeskView)findViewById(R.id.desk);
 		wall=(ImageView)findViewById(R.id.wall);
-        wall.setImageDrawable(peekWallpaper());
-		new Handler(){
-			public void handleMessage(Message msg){
-				mysett=getSQLCursor(DbProvider.URI_MSETT,scontent,null,null,null);
-				dbo=getSQLCursor(DbProvider.URI_OBJ,itcontent,null,null,null);
-				LoadApps();
-			}
-		}.sendEmptyMessageDelayed(0,100);
 		dv.setEvents(this);
+        wall.setImageDrawable(peekWallpaper());
+		mysett=getSQLCursor(DbProvider.URI_MSETT,scontent,null,null,null);
+		dbo=getSQLCursor(DbProvider.URI_OBJ,itcontent,null,null,null);
+		accurateLoadObj();
     }
+	
+	@Override
+	public void onStart(){
+		Log.d(LOG_TAG,"onStart");
+//		if(FIRSTLOAD)FIRSTLOAD=false;
+//		else forceLoadObj();
+		super.onStart();
+	}
+	
+	@Override
+	public void onPostResume(){
+		Log.d(LOG_TAG,"onPostResume");
+//		dv.postInvalidate();
+		super.onPostResume();
+	}
 	
     @Override
     public void onDestroy() {
@@ -65,13 +79,16 @@ public class DesktopUI extends Activity implements DeskView.Events
         if(CLOSE)System.exit(0);
     }
 	@Override
-	public void onPause(){
-		super.onPause();
+	public void onStop(){
+		Log.d(LOG_TAG,"onStop");
+//		dv.clear();
 //		dv.flushCache();
+//		dv.invalidate();
+		super.onStop();
 	}
 	
 	private void createActionBar(){
-		Log.d(LOG_TAG,"Action Bar");
+//		Log.d(LOG_TAG,"Action Bar");
 	    if(Utilities.isNewApi()){
 	        ActionBar a=getActionBar();
 //	        a.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
@@ -144,7 +161,9 @@ public class DesktopUI extends Activity implements DeskView.Events
     	switch (id)
 		{
 			case R.id.mysett: 
+			try{
 				showDialog(DIALOG_SETTINGS);
+			}catch(Exception e){MessageBox(e.toString(),5000);}
 				return true;
 			case R.id.srch:
 				onSearchRequested();
@@ -199,6 +218,7 @@ public class DesktopUI extends Activity implements DeskView.Events
 		bq.setChecked(mysett.getInt(2)==1);
 		final Button re=(Button)v.findViewById(R.id.btn_reset);
 		re.setOnClickListener(new View.OnClickListener(){
+			@Override
 			public void onClick(View v){
 				getApplicationContext().deleteDatabase(DbProvider.DB_MAIN);
 				System.exit(0);
@@ -209,9 +229,14 @@ public class DesktopUI extends Activity implements DeskView.Events
     	return builder.setTitle(R.string.mysett)
 			.setView(v)
 			.setOnCancelListener(new DialogInterface.OnCancelListener(){
+				@Override
 				public void onCancel(DialogInterface di){
 					int pis=Integer.parseInt(is.getText().toString());
+					if(pis>128)pis=128;
+					else if(pis<32)pis=32;
 					int pfs=Integer.parseInt(fs.getText().toString());
+					if(pfs>64)pfs=64;
+					else if(pfs<10)pfs=10;
 					boolean pbq=bq.isChecked();
 					if(mysett.getInt(0)!=pis||mysett.getInt(1)!=pfs||(mysett.getInt(2)==1)!=pbq){
 					    ContentValues val=new ContentValues(3);
@@ -221,7 +246,8 @@ public class DesktopUI extends Activity implements DeskView.Events
 					    getContentResolver().update(DbProvider.URI_MSETT,val,"_ID=1",null);
 					    updateSQLCursor(DbProvider.URI_MSETT,scontent);
 						Utilities.resetStatics();
-					    LoadApps();
+						dv.flushCache();
+					    accurateLoadObj();
 					}
 				}
 			})
@@ -239,6 +265,7 @@ public class DesktopUI extends Activity implements DeskView.Events
 		final ImageButton p2s=(ImageButton)v.findViewById(R.id.edit_p2_srch);
 
 		View.OnClickListener clickl=new View.OnClickListener(){
+			@Override
 			public void onClick(View v){
 				switch (v.getId()){
 					case R.id.edit_n_srch:
@@ -259,6 +286,7 @@ public class DesktopUI extends Activity implements DeskView.Events
 			.setView(v)
 			.setCancelable(false)
 			.setPositiveButton(R.string.save,new DialogInterface.OnClickListener(){
+				@Override
 				public void onClick(DialogInterface d,int id){
 					String sn =n.getText().toString();
 					String sp1=p1.getText().toString();
@@ -273,12 +301,14 @@ public class DesktopUI extends Activity implements DeskView.Events
 					    getContentResolver().insert(DbProvider.URI_OBJ,val);
 					    updateSQLCursor(DbProvider.URI_OBJ,itcontent);
 						dbo.moveToLast();
-						dv.addItem(dbo.getString(1),new ComponentName(dbo.getString(2),dbo.getString(3)),dbo.getInt(5),dbo.getInt(6));
+						dv.addItem(dbo.getInt(1),dbo.getString(2),dbo.getString(3),dbo.getString(4),dbo.getInt(6),dbo.getInt(7));
+						dv.correctTableSize();
 						dv.postInvalidate();
 					}
 				}
 			})
 			.setNegativeButton(R.string.cancel,new DialogInterface.OnClickListener(){
+				@Override
 				public void onClick(DialogInterface d,int id){
 					d.cancel();
 				}
@@ -307,32 +337,47 @@ public class DesktopUI extends Activity implements DeskView.Events
         return dialog;
     }
 
-    void MessageBox(String str, int dur)
+    public void MessageBox(String str, int dur)
 	{
     	Toast.makeText(getApplicationContext(), str, dur)
     	.show();
     }
 	
-	void LoadApps()
+	private void accurateLoadObj()
 	{
+		Log.d(LOG_TAG,"accutate load begins");
 		dv.clear();
 		dv.setMySettings(mysett);
 		dbo.moveToPosition(-1);
 		new Handler(){
-			@SuppressLint("HandlerLeak")
 			public void handleMessage(Message msg){
 				if(dbo.moveToNext()){
-					dv.addItem(dbo.getString(1),new ComponentName(dbo.getString(2),dbo.getString(3)),dbo.getInt(5),dbo.getInt(6));
+					dv.addItem(dbo.getInt(1),dbo.getString(2),dbo.getString(3),dbo.getString(4),dbo.getInt(6),dbo.getInt(7));
+					dv.postInvalidate();
 					sendEmptyMessage(0);
 				}else {
 					dbo.moveToFirst();
-					Log.d(LOG_TAG,"Load Complete");
+					dv.correctTableSize();
+					Log.d(LOG_TAG,"accutate load complete");
 					MessageBox("Load Complete",3000);
 				}
 			}
 		}.sendEmptyMessage(0);
     }
-
+/*	
+	private void forceLoadObj(){
+		Log.d(LOG_TAG,"force load begins");
+		dv.clear();
+		dv.setMySettings(mysett);
+		dbo.moveToPosition(-1);
+		while(dbo.moveToNext())
+			dv.addItem(dbo.getInt(1),dbo.getString(2),dbo.getString(3),dbo.getString(4),dbo.getInt(6),dbo.getInt(7));
+		dbo.moveToFirst();
+		dv.correctTableSize();
+		Log.d(LOG_TAG,"force load complete");
+		MessageBox("Load Complete",3000);
+	}
+*/
 	public void onClick(int pos,Obj it)
 	{
 		if (!it.isMoved())
@@ -340,12 +385,11 @@ public class DesktopUI extends Activity implements DeskView.Events
 		{
 			if(it.isClicked()){
 			    dbo.moveToPosition(pos);
-			    Intent start=new Intent(Intent.ACTION_MAIN);
-		        start.addCategory(Intent.CATEGORY_LAUNCHER);
-		        start.setComponent(new ComponentName(dbo.getString(2), dbo.getString(3)));
-		        start.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-		        startActivity(start);
-			    Log.d(LOG_TAG,"Started Activity: "+dbo.getString(1)+" ("+dbo.getString(3)+")");
+				Intent start=it.run();
+				if(start!=null){
+				    startActivity(start);
+			        Log.d(LOG_TAG,"Started Object: "+dbo.getString(2)+" ("+dbo.getString(4)+")");
+				}
 			    it.setClicked(false);
 			    dv.invalidate();
 		    }
@@ -353,7 +397,7 @@ public class DesktopUI extends Activity implements DeskView.Events
 		catch (Exception e)
 		{
 			MessageBox("Not found", 3000);
-			Log.e(LOG_TAG,"Start Activity failed: "+dbo.getString(1)+" ("+dbo.getString(3)+")");
+			Log.e(LOG_TAG,"Start Object failed: "+dbo.getString(2)+" ("+dbo.getString(4)+")");
 		}else{
 			dbo.moveToPosition(pos);
 			it.setMoving(false);
@@ -366,13 +410,12 @@ public class DesktopUI extends Activity implements DeskView.Events
 			dv.correctTableSize();
 		}
 	}
-	@SuppressWarnings("deprecation")
 	public void onLongClick(int pos,Obj it,int x,int y){
 		if (it != null){
 			if (it.isClicked()){
 				dbo.moveToPosition(pos);
 				it.setMoving(true);
-				MessageBox("item x=" + dbo.getInt(5) + "\nitem y=" + dbo.getInt(6)
+				MessageBox("item x=" + dbo.getInt(6) + "\nitem y=" + dbo.getInt(7)
 						   + "\ntouch x=" + x + "\ntouch y=" + y, 5000);
 				it.setClicked(false);
 				dv.invalidate();

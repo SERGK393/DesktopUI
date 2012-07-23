@@ -34,12 +34,14 @@ public class DbProvider extends ContentProvider{
      
      map=new HashMap<String,String>();
      map.put(DbManager._ID,DbManager._ID);
-     map.put(DbManager.NAME,DbManager.NAME);
+	 map.put(DbManager.TYPE,DbManager.TYPE);
+	 map.put(DbManager.NAME,DbManager.NAME);
      map.put(DbManager.PARAM_1,DbManager.PARAM_1);
      map.put(DbManager.PARAM_2,DbManager.PARAM_2);
 	 map.put(DbManager.PARAM_3,DbManager.PARAM_3);
 	 map.put(DbManager.POSX,DbManager.POSX);
 	 map.put(DbManager.POSY,DbManager.POSY);
+	 
 	 map.put(DbManager.ICN_SZ,DbManager.ICN_SZ);
 	 map.put(DbManager.FNT_SZ,DbManager.ICN_SZ);
 	 map.put(DbManager.BMP_Q,DbManager.BMP_Q);

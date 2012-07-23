@@ -99,13 +99,16 @@ public final class Utilities {
 		for(int i=1,j=0,k=0;i<=len;i++){
 			p.getTextBounds(s,j,i,b);
 			char c=s.charAt(i-1);
-			char nc='\0';
+			char n2c='\0';
 			char pc='\0';
+			char p2c='\0';
 			if(i>1)pc=s.charAt(i-2);
+			if(i>2)p2c=s.charAt(i-3);
+			if(i<len-2)n2c=s.charAt(i+1);
 			if(Dels.contains(String.valueOf(c)))
-				if(pc!=' ')k=i;
-			if(k<len-1)nc=s.charAt(k+1);
-			if(b.right>w&&i<len-1&&nc!=' '){
+				if(pc!=' '&&p2c!=' '&&n2c!=' ')
+					k=i;
+			if(b.right>w&&i<len-1){
 				a.add(s.substring(j,k));
 				j=k; k=i; continue;
 			}

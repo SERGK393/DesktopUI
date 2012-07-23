@@ -11,7 +11,7 @@
     <string name="cancel">Отмена</string>
     <string name="apps">Приложения</string>
 	<string name="mysett_m">Параметры</string>
-	<string name="mysett">-----Параметры-----</string>
+	<string name="mysett">Параметры программы</string>
 	<string name="mst_itmsize">Размер иконки</string>
 	<string name="mst_fntsize">Размер шрифта</string>
 	<string name="mst_bmp_quality">Высокое качество</string>
