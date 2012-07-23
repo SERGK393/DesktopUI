@@ -2,11 +2,7 @@ package ru.k3.desktopui;
 
 import android.graphics.Rect;
 import android.graphics.Canvas;
-import android.graphics.Bitmap;
 import android.graphics.Paint;
-import android.graphics.drawable.Drawable;
-import android.text.TextUtils;
-import android.text.TextPaint;
 import android.content.ComponentName;
 import java.util.ArrayList;
 import android.graphics.Color;
@@ -20,7 +16,7 @@ public class Obj{
 	private final IconCache icc;
 	private final ComponentName comp;
 	private final ArrayList<String> title;
-	private final byte w,h,fh,typeint,lw=0,lb=0,sn;
+	private final byte w,h,fh,typeint,lw,lb,sn;
 	private final Paint txt,icp;
 	private final ObjType type;
 	private final Intent start;
@@ -57,11 +53,13 @@ public class Obj{
 		this.title=Utilities.partString(txt,title,w);
 		sn=(byte)this.title.size();
 		Rect tmp=new Rect();
+		byte tlw=0,tlb=0;
 		for(String tit:this.title){
 		    txt.getTextBounds(tit,0,tit.length(),tmp);
-		    if(lw<tmp.right-w)lw=(byte)(tmp.right-w);
-			if(lb<tmp.bottom)lb=(byte)tmp.bottom;
+		    if(tlw<tmp.right-w)tlw=(byte)(tmp.right-w);
+			if(tlb<tmp.bottom)tlb=(byte)tmp.bottom;
 		}
+		lw=tlw; lb=tlb;
 		correctAbsoluteCoords();
 	}
 	
@@ -107,6 +105,9 @@ public class Obj{
 	public int getAbsoluteY2(){
 		return ab;
 	}
+	public ObjType getType(){
+		return type;
+	}
 	
 	public boolean isClicked(){
 		return clicked;
@@ -121,7 +122,4 @@ public class Obj{
 	}
 	
 	public enum ObjType{UNK,APP,FULL,SHORTCUT,SETTINGS};
-	private interface Running{
-		public Intent go();
-	}
 }

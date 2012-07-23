@@ -2,7 +2,6 @@ package ru.k3.desktopui;
 
 import ru.k3.desktopui.db.*;
 
-import java.util.*;
 import android.app.*;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -10,8 +9,6 @@ import android.widget.*;
 import android.content.*;
 import android.net.*;
 import android.util.*;
-import android.content.pm.*;
-import android.graphics.drawable.*;
 import android.content.res.Configuration;
 import android.os.Handler;
 import android.os.Message;
@@ -218,7 +215,6 @@ public class DesktopUI extends Activity implements DeskView.Events
 		bq.setChecked(mysett.getInt(2)==1);
 		final Button re=(Button)v.findViewById(R.id.btn_reset);
 		re.setOnClickListener(new View.OnClickListener(){
-			@Override
 			public void onClick(View v){
 				getApplicationContext().deleteDatabase(DbProvider.DB_MAIN);
 				System.exit(0);
@@ -229,7 +225,6 @@ public class DesktopUI extends Activity implements DeskView.Events
     	return builder.setTitle(R.string.mysett)
 			.setView(v)
 			.setOnCancelListener(new DialogInterface.OnCancelListener(){
-				@Override
 				public void onCancel(DialogInterface di){
 					int pis=Integer.parseInt(is.getText().toString());
 					if(pis>128)pis=128;
@@ -265,7 +260,6 @@ public class DesktopUI extends Activity implements DeskView.Events
 		final ImageButton p2s=(ImageButton)v.findViewById(R.id.edit_p2_srch);
 
 		View.OnClickListener clickl=new View.OnClickListener(){
-			@Override
 			public void onClick(View v){
 				switch (v.getId()){
 					case R.id.edit_n_srch:
@@ -286,7 +280,6 @@ public class DesktopUI extends Activity implements DeskView.Events
 			.setView(v)
 			.setCancelable(false)
 			.setPositiveButton(R.string.save,new DialogInterface.OnClickListener(){
-				@Override
 				public void onClick(DialogInterface d,int id){
 					String sn =n.getText().toString();
 					String sp1=p1.getText().toString();
@@ -308,7 +301,6 @@ public class DesktopUI extends Activity implements DeskView.Events
 				}
 			})
 			.setNegativeButton(R.string.cancel,new DialogInterface.OnClickListener(){
-				@Override
 				public void onClick(DialogInterface d,int id){
 					d.cancel();
 				}
@@ -410,6 +402,7 @@ public class DesktopUI extends Activity implements DeskView.Events
 			dv.correctTableSize();
 		}
 	}
+	@SuppressWarnings("deprecation")
 	public void onLongClick(int pos,Obj it,int x,int y){
 		if (it != null){
 			if (it.isClicked()){

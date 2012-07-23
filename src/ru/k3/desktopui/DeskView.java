@@ -2,7 +2,6 @@ package ru.k3.desktopui;
 
 import android.content.*;
 import android.graphics.*;
-import android.os.*;
 import android.view.*;
 import java.util.*;
 
