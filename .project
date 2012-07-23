@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<projectDescription>
+ <projectDescription>
 	<name>AppTemplate</name>
 	<comment></comment>
 	<projects>
@@ -30,4 +30,4 @@
 		<nature>com.android.ide.eclipse.adt.AndroidNature</nature>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
-</projectDescription>
+ </projectDescription>
