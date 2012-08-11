@@ -82,10 +82,10 @@ public class DeskView extends View
 	}
 	
 	public void setMySettings(Cursor db){
-		Log.d(LOG_TAG,"Setting params");
 		db.moveToFirst();
 		is=db.getInt(0);
 		fh=db.getInt(1);
+		Log.d(LOG_TAG,"Params setted: is="+is+" fh="+fh);
 	}
 	
 	public void setEvents(Events evt){
@@ -143,7 +143,7 @@ public class DeskView extends View
         }
 
 		if ((ev.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_MOVE){
-			Obj it=itm.get(clk.getItemPos());
+			Obj it=itm.get(clk.getItemPos()>=0?clk.getItemPos():0);
 			if (it.isMoved()){
 				int newx,newy;
 				newx = getScrollX();
@@ -157,7 +157,7 @@ public class DeskView extends View
 					if(sw<sw1)sw=sw1;
 					sh=it.getAbsoluteY2();
 					if(sh<sh1)sh=sh1;
-					scrollBy((newx-getScrollX())/3,(newy-getScrollY())/3);
+					scrollBy(newx-getScrollX(),newy-getScrollY());
 				}
 				clk.onMoveItem(it,(int)ev.getX()+getScrollX()-mtx,(int)ev.getY()+getScrollY()-mty);
 				invalidate();
@@ -229,13 +229,14 @@ public class DeskView extends View
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY)
         {
-            boolean scroll = (((velocityX<1800)&&(velocityX>-1800))&&((velocityY<1800)&&(velocityY>-1800)));
-            if (scroll) return false;
+            boolean scroll = (((velocityX<900)&&(velocityX>-900))&&((velocityY<900)&&(velocityY>-900)));
+            if(scroll)scroll=getScrollX()<getWidth()&&getScrollY()<getHeight()&&(getScrollX()+getWidth()*2)>sw&&(getScrollY()+getHeight()*2)>sh;
+            if(scroll)return false;
 
-            scroller.fling(getScrollX(), getScrollY(), -(int)velocityX, -(int)velocityY, 0, sw - getWidth(), 0, sh - getHeight());
+            scroller.fling(getScrollX(), getScrollY(), -(int)velocityX, -(int)velocityY, 0, sw-getWidth(), 0, sh-getHeight());
             awakenScrollBars(scroller.getDuration());
 
-            return true;
+            return false;
         }
 		
 		@Override

@@ -75,13 +75,13 @@ public class DbManager extends SQLiteOpenHelper implements BaseColumns{
     	if (apps != null) {
 			int i=0;
      	    for (ResolveInfo info:apps) {
-//				if(!info.activityInfo.name.startsWith("com.android.")) continue;
+				if(!info.activityInfo.name.startsWith("com.android.")) continue;
 				val.put(TYPE,1);
        	        val.put(NAME,info.loadLabel(manager).toString());
 		        val.put(PARAM_1,info.activityInfo.applicationInfo.packageName);
 		        val.put(PARAM_2,info.activityInfo.name);
-		        val.put(POSX,(i/4)*75+5);
-		        val.put(POSY,((i%4<4)?88*(i%4):0));
+		        val.put(POSX,(i/4)*79+5);
+		        val.put(POSY,((i%4<4)?104*(i%4):0));
 		        db.insert(OBJ,NAME,val);
 				i++;
             }

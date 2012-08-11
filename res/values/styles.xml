@@ -1,6 +1,6 @@
 <resources>
     <style parent="android:Theme.DeviceDefault" name="Theme">
         <item name="android:windowActionBar">true</item>
-        <item name="android:windowNoTitle">false</item>
+        <item name="android:windowNoTitle">true</item>
 	</style>
 </resources>

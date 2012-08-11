@@ -21,13 +21,14 @@
 			<EditText
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
-				android:layout_weight="1"
+				android:singleLine="true"
+				android:layout_weight="0.2"
 				android:id="@+id/edit_n"/>
 			<ImageButton
-				android:layout_width="wrap_content"
+				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
-				android:layout_weight="0"
-				android:src="@android:drawable/ic_menu_search"
+				android:layout_weight="0.8"
+				android:src="@android:drawable/arrow_down_float"
 				android:id="@+id/edit_n_srch"/>
 		</LinearLayout>
 
@@ -42,13 +43,14 @@
 			<EditText
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
-				android:layout_weight="1"
+			    android:singleLine="true"
+				android:layout_weight="0.2"
 				android:id="@+id/edit_p1"/>
 			<ImageButton
-				android:layout_width="wrap_content"
+				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
-				android:layout_weight="0"
-				android:src="@android:drawable/ic_menu_search"
+				android:layout_weight="0.8"
+				android:src="@android:drawable/arrow_down_float"
 				android:id="@+id/edit_p1_srch"/>
 		</LinearLayout>
 
@@ -63,13 +65,14 @@
 			<EditText
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
-				android:layout_weight="1"
+				android:singleLine="true"
+				android:layout_weight="0.2"
 				android:id="@+id/edit_p2"/>
 			<ImageButton
-				android:layout_width="wrap_content"
+				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
-				android:layout_weight="0"
-				android:src="@android:drawable/ic_menu_search"
+				android:layout_weight="0.8"
+				android:src="@android:drawable/arrow_down_float"
 				android:id="@+id/edit_p2_srch"/>
 		</LinearLayout>
 
