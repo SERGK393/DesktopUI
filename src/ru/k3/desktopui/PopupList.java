@@ -15,6 +15,9 @@ import android.content.Context;
 import android.widget.ArrayAdapter;
 
 public class PopupList{
+    private int width;
+	private String max="";
+
 	protected final View anchor;
 	protected final PopupWindow window;
 	private View root;
@@ -26,10 +29,10 @@ public class PopupList{
 	public PopupList(View anchor) {
 		this.anchor = anchor;
 		c=anchor.getContext();
-		this.window = new PopupWindow(c);
-
-		lv=new ListView(c);
 		adapt=new ArrayAdapter<String>(c,R.layout.listitem,R.id.list_item);
+
+		this.window = new PopupWindow(c);
+		lv=new ListView(c);
 		lv.setAdapter(adapt);
 		setContentView(lv);
 
@@ -53,11 +56,23 @@ public class PopupList{
 		onCreate();
 	}
 	
-	public ArrayAdapter<String> getAdapter(){
-		return adapt;
+	public void addToAdapter(String str){
+		if(max.length()<str.length())max=str;
+		adapt.add(str);
+	}
+	public void resetAdapter(){
+		max="";
+		width=0;
+		adapt.clear();
 	}
 	public void setOnItemClickListener(ListView.OnItemClickListener l){
 		lv.setOnItemClickListener(l);
+	}
+	public void setWidth(int width){
+		if(width>0)
+		    this.width=width;
+		else
+		    this.width=(int)(anchor.getContext().getResources().getDimension(R.dimen.listitem_h)-2)*max.length();
 	}
 
 	/**
@@ -84,7 +99,7 @@ public class PopupList{
 		// otherwise you need to set the background of the root viewgroup
 		// and set the popupwindow background to an empty BitmapDrawable
 
-		window.setWidth(anchor.getWidth());
+		window.setWidth(width);
 		window.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
 		window.setTouchable(true);
 		window.setFocusable(true);
@@ -164,21 +179,18 @@ public class PopupList{
 			new Rect(location[0], location[1], location[0] + anchor.getWidth(), location[1]
 					 + anchor.getHeight());
 
-		root.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-		root.measure(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		int rootWidth 		= width;//root.getWidth();
+		int rootHeight 		= (adapt.getCount()+1)*(int)(c.getResources().getDimension(R.dimen.listitem_h)+c.getResources().getDimension(R.dimen.listitem_p));//root.getHeight();
 
-		int rootWidth 		= root.getMeasuredWidth();
-		int rootHeight 		= root.getMeasuredHeight();
-
-		int screenWidth 	= windowManager.getDefaultDisplay().getWidth();
+//		int screenWidth 	= windowManager.getDefaultDisplay().getWidth();
 		//int screenHeight 	= windowManager.getDefaultDisplay().getHeight();
 
-		int xPos 			= ((screenWidth - rootWidth) / 2) + xOffset;
-		int yPos	 		= anchorRect.top - rootHeight + yOffset;
+		int xPos 			= -(rootWidth / 2) + xOffset - anchor.getScrollX();
+		int yPos	 		= anchorRect.top - rootHeight + yOffset - anchor.getScrollY();
 
 		// display on bottom
-		if (rootHeight > anchorRect.top) {
-			yPos = anchorRect.bottom + yOffset;
+		if (rootHeight > yOffset - anchor.getScrollY()){//anchorRect.top) {
+			yPos = anchorRect.top + yOffset - anchor.getScrollY();
 
 //			window.setAnimationStyle(R.style.Animations_PopDownMenu_Center);
 		}

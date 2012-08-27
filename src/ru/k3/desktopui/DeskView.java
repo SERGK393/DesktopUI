@@ -92,9 +92,9 @@ public class DeskView extends View
 		clk=evt;
 	}
 	
-	public void setMoveTouching(MotionEvent ev,Obj it){
-		mtx=getScrollX()+(int)ev.getX()-it.getXPos();
-		mty=getScrollY()+(int)ev.getY()-it.getYPos();
+	public void setMoveTouching(Obj it){
+		mtx=is-(int)((((float)it.getXPos()-getScrollX())/getWidth())*is);
+		mty=is-(int)((((float)it.getYPos()-getScrollY())/getHeight())*is);
 	}
 	
 	public void addItem(int type,String title,String p1,String p2,int x,int y){
@@ -145,6 +145,7 @@ public class DeskView extends View
 		if ((ev.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_MOVE){
 			Obj it=itm.get(clk.getItemPos()>=0?clk.getItemPos():0);
 			if (it.isMoved()){
+				setMoveTouching(it);
 				int newx,newy;
 				newx = getScrollX();
 				newy = getScrollY();
@@ -242,7 +243,13 @@ public class DeskView extends View
 		@Override
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY)
         {
-			for (int i=0;i<itm.size();i++) itm.get(i).setClicked(false);
+			boolean onMove=false;
+			for (int i=0;i<itm.size();i++) {
+				Obj it=itm.get(i);
+				if(it.isMoved())onMove=true;
+				else it.setClicked(false);
+			}
+			if(onMove)return true;
 			
             boolean scrollOut = ((getScrollX() < -10) || (getScrollX() > sw-getWidth()+10) || (getScrollY() < -10) || (getScrollY() > sh-getHeight()+10));
             int distX=sw>getWidth()?(scrollOut?(int)distanceX/2:(int)distanceX):0;
@@ -261,7 +268,6 @@ public class DeskView extends View
 			if (i<itm.size()){
 				sw1=sw; sh1=sh;
 				clk.onLongClick(i,itm.get(i),(int)ev.getX()+getScrollX(),(int)ev.getY()+getScrollY());
-				setMoveTouching(ev,itm.get(i));
 			}else
 			clk.onLongClick(0,null,(int)ev.getX()+getScrollX(),(int)ev.getY()+getScrollY());
 		}

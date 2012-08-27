@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string-array name="context_menu">
+		<item>Open</item>
+		<item>Edit</item>
+		<item>Remove</item>
+	</string-array>
+	<string-array name="empty_context_menu">
+		<item>Add</item>
+		<item>Wallpaper</item>
+	</string-array>
+</resources>

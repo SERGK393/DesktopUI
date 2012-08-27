@@ -152,6 +152,12 @@ public class DesktopUI extends Activity implements DeskView.Events
 		super.onConfigurationChanged(conf);
 	}
 	
+	@Override
+    public boolean onSearchRequested() {
+        startSearch(null, false, null, true);
+        return true;
+    }
+	
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
 	{
@@ -173,8 +179,12 @@ public class DesktopUI extends Activity implements DeskView.Events
 	{
     	switch (id)
 		{
-			case R.id.mysett: 
+			case R.id.add:
+				showDialog(DIALOG_EDIT);
+				return true;
+			case R.id.mysett:
 			try{
+				mysett.moveToFirst();
 				showDialog(DIALOG_SETTINGS);
 			}catch(Exception e){MessageBox(e.toString(),5000);}
 				return true;
@@ -196,6 +206,9 @@ public class DesktopUI extends Activity implements DeskView.Events
 	
 	public int getPref(int p){
 		return mysett!=null?mysett.getInt(p):-1;
+	}
+	public DeskView getDeskView(){
+		return dv;
 	}
 
     public AlertDialog ExitMenu()
@@ -242,6 +255,7 @@ public class DesktopUI extends Activity implements DeskView.Events
 			.setView(v)
 			.setOnCancelListener(new DialogInterface.OnCancelListener(){
 				public void onCancel(DialogInterface di){
+					mysett.moveToFirst();
 					int pis=Integer.parseInt(is.getText().toString());
 					if(pis>128)pis=128;
 					else if(pis<32)pis=32;
@@ -279,6 +293,10 @@ public class DesktopUI extends Activity implements DeskView.Events
 
 		View.OnClickListener clickl=new View.OnClickListener(){
 			public void onClick(View v){
+				final PopupList pop;
+				/*boolean isnew_pop=*/Utilities.isNewPopup(Utilities.POP_APPS,n);
+				pop=Utilities.getPopupList(Utilities.POP_APPS);
+				pop.resetAdapter();
 				switch (v.getId()){
 					case R.id.edit_n_srch:
 						Intent intent_n = new Intent(Intent.ACTION_MAIN, null);
@@ -286,19 +304,19 @@ public class DesktopUI extends Activity implements DeskView.Events
 						final List<ResolveInfo> apps_n = man.queryIntentActivities(intent_n, 0);
 						Collections.sort(apps_n, new ResolveInfo.DisplayNameComparator(man));
 						
-						final PopupList pop_n=new PopupList(n);
-						ArrayAdapter<String> ad_n=pop_n.getAdapter();
-						for (ResolveInfo inf:apps_n)ad_n.add(inf.loadLabel(man).toString());
-						pop_n.setOnItemClickListener(new ListView.OnItemClickListener(){
+						for (ResolveInfo inf:apps_n)pop.addToAdapter(inf.loadLabel(man).toString());
+						pop.setWidth(n.getWidth());
+						pop.setOnItemClickListener(new ListView.OnItemClickListener(){
 							public void onItemClick(AdapterView<?> a,View v,int pos,long id){
 								ResolveInfo inf=apps_n.get(pos);
 								n.setText(inf.loadLabel(man));
 								p1.setText(inf.activityInfo.applicationInfo.packageName);
 								p2.setText(inf.activityInfo.name);
-								pop_n.dismiss();
+								apps_n.clear();
+								pop.dismiss();
 							}
 						});
-						pop_n.showDropDown();
+						pop.showDropDown();
 						break;
 					case R.id.edit_p1_srch:
 						String vendor=getVendor(p1.getText().toString());
@@ -308,24 +326,24 @@ public class DesktopUI extends Activity implements DeskView.Events
 						final List<ResolveInfo> apps_p1 = man.queryIntentActivities(intent_p1, 0);
 						Collections.sort(apps_p1, new ResolveInfo.DisplayNameComparator(man));
 
-						final PopupList pop_p1=new PopupList(p1);
-						ArrayAdapter<String> ad_p1=pop_p1.getAdapter();
 						final ArrayList<Integer> lnk_p1=new ArrayList<Integer>();
 						for (ResolveInfo inf:apps_p1)if(inf.activityInfo.applicationInfo.packageName.startsWith(vendor)){
 							                         lnk_p1.add(apps_p1.indexOf(inf));
-						                             ad_p1.add(inf.loadLabel(man).toString()
+						                             pop.addToAdapter(inf.loadLabel(man).toString()
 						                                       +" ("+inf.activityInfo.applicationInfo.packageName+")");
 													 }
-						pop_p1.setOnItemClickListener(new ListView.OnItemClickListener(){
+						pop.setWidth(p1.getWidth());
+						pop.setOnItemClickListener(new ListView.OnItemClickListener(){
 								public void onItemClick(AdapterView<?> a,View v,int pos,long id){
 									ResolveInfo inf=apps_p1.get(lnk_p1.get(pos));
 									n.setText(inf.loadLabel(man));
 									p1.setText(inf.activityInfo.applicationInfo.packageName);
 									p2.setText(inf.activityInfo.name);
-									pop_p1.dismiss();
+									apps_p1.clear();
+									pop.dismiss();
 								}
 							});
-						pop_p1.showLikeQuickAction();
+						pop.showLikeQuickAction();
 						break;
 					case R.id.edit_p2_srch:
 						String pak=p1.getText().toString();
@@ -335,24 +353,24 @@ public class DesktopUI extends Activity implements DeskView.Events
 						final List<ResolveInfo> apps_p2 = man.queryIntentActivities(intent_p2, 0);
 						Collections.sort(apps_p2, new ResolveInfo.DisplayNameComparator(man));
 
-						final PopupList pop_p2=new PopupList(p2);
-						ArrayAdapter<String> ad_p2=pop_p2.getAdapter();
 						final ArrayList<Integer> lnk_p2=new ArrayList<Integer>();
 						for (ResolveInfo inf:apps_p2)if(inf.activityInfo.applicationInfo.packageName.startsWith(pak)){
 								lnk_p2.add(apps_p2.indexOf(inf));
-								ad_p2.add(inf.loadLabel(man).toString()
+								pop.addToAdapter(inf.loadLabel(man).toString()
 										  +" ("+inf.activityInfo.applicationInfo.packageName+")");
 							}
-						pop_p2.setOnItemClickListener(new ListView.OnItemClickListener(){
+						pop.setWidth(p2.getWidth());
+						pop.setOnItemClickListener(new ListView.OnItemClickListener(){
 								public void onItemClick(AdapterView<?> a,View v,int pos,long id){
 									ResolveInfo inf=apps_p2.get(lnk_p2.get(pos));
 									n.setText(inf.loadLabel(man));
 									p1.setText(inf.activityInfo.applicationInfo.packageName);
 									p2.setText(inf.activityInfo.name);
-									pop_p2.dismiss();
+									apps_p2.clear();
+									pop.dismiss();
 								}
 							});
-						pop_p2.showLikeQuickAction();
+						pop.showLikeQuickAction();
 						break;
 				}
 			}
@@ -495,17 +513,32 @@ public class DesktopUI extends Activity implements DeskView.Events
 		if (it != null){
 			if (it.isClicked()){
 				dbo.moveToPosition(pos);
+				it.setClicked(false);
 				it.setMoving(true);
 				MessageBox("item x=" + dbo.getInt(6) + "\nitem y=" + dbo.getInt(7)
 						   + "\ntouch x=" + x + "\ntouch y=" + y, 5000);
-				it.setClicked(false);
 				dv.invalidate();
 			}
 		}
 		else{
 			MessageBox("touch x=" + x + "\ntouch y=" + y, 5000);
 			TOUCHX=x; TOUCHY=y;
-			showDialog(DIALOG_EDIT);
+			
+			final PopupList pop;
+			if(Utilities.isNewPopup(Utilities.POP_CONTEXT1,dv)){
+			pop=Utilities.getPopupList(Utilities.POP_CONTEXT1);
+			String[]strs=getResources().getStringArray(R.array.empty_context_menu);
+			for(String str:strs)pop.addToAdapter(str);
+			pop.setWidth(0);
+			pop.setOnItemClickListener(new ListView.OnItemClickListener(){
+					public void onItemClick(AdapterView<?> a,View v,int pos,long id){
+						if(pos==0)showDialog(DIALOG_EDIT);
+						
+						pop.dismiss();
+					}
+				});
+			}else pop=Utilities.getPopupList(Utilities.POP_CONTEXT1);
+			pop.showLikeQuickAction(x,y);
 		}
 	}
 	public void onMoveItem(Obj it,int mx,int my){

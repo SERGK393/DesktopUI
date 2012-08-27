@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import android.graphics.Color;
 import android.content.Intent;
 import android.util.Log;
+import android.graphics.Typeface;
 
 public class Obj{
 	private static final String LOG_TAG="DesktopUI.Obj";
@@ -31,6 +32,7 @@ public class Obj{
 		this.fh=(byte)fh;
 		this.icc=icc;
 		txt=new Paint();
+		txt.setAntiAlias(true);
 		txt.setTextAlign(Paint.Align.CENTER);
 //		txt.setShadowLayer(5,0,0,Color.BLACK);
 		txt.setColor(Color.WHITE);
@@ -86,11 +88,23 @@ public class Obj{
 	public void setClicked(boolean cl){
 		clicked=cl;
 //		txt.setUnderlineText(cl);
-		if(cl)icp.setAlpha(128);
-		else icp.setAlpha(255);
+		if(cl){
+			icp.setAlpha(128);
+			txt.setAlpha(128);
+		}else{
+			icp.setAlpha(255);
+			txt.setAlpha(255);
+		}
 	}
 	public void setMoving(boolean mv){
 		moved=mv;
+		if(mv){
+			icp.setAlpha(128);
+			txt.setAlpha(128);
+		}else{
+			icp.setAlpha(255);
+			txt.setAlpha(255);
+		}
 	}
 	
 	public int getXPos(){

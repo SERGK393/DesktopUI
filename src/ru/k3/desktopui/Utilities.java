@@ -16,27 +16,32 @@
 
 package ru.k3.desktopui;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+import java.io.*;
+import java.util.ArrayList;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.PaintFlagsDrawFilter;
-import android.graphics.Rect;
+import android.graphics.*;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.os.Build;
-import java.util.ArrayList;
+import android.util.Log;
+import android.widget.ArrayAdapter;
+import android.view.View;
 
 
 public final class Utilities {
     private static final String LOG_TAG="DesktopUI.Utilities";
 	private static final String Dels="aouiey -аоуыэяёюие";
+	public static final int POP_CONTEXT1=1;
+	public static final int POP_CONTEXT2=2;
+	public static final int POP_APPS=4;
+	
+	private static PopupList pop_c1=null;
+	private static PopupList pop_c2=null;
+	private static PopupList pop_apps=null;
  
     private static final Rect sOldBounds = new Rect();
     private static final Canvas sCanvas = new Canvas();
+	private static DesktopUI desk=null;
 	private static int sIconSize=-1;
 	private static Bitmap.Config quality=null;
 /*
@@ -67,13 +72,14 @@ public final class Utilities {
     }
 
     private static void initStatics(Context context) {
-		DesktopUI d=(DesktopUI)context;
-        sIconSize=d.getPref(0);
-		quality=d.getPref(2)==0?Bitmap.Config.ARGB_4444:Bitmap.Config.ARGB_8888;
+		if(desk==null)desk=(DesktopUI)context;
+        sIconSize=desk.getPref(0);
+		quality=desk.getPref(2)==0?Bitmap.Config.ARGB_4444:Bitmap.Config.ARGB_8888;
     }
 	public static void resetStatics(){
 		sIconSize=-1;
 		quality=null;
+		desk=null;
 	}
 
     public static byte[] flattenBitmap(Bitmap bitmap) {
@@ -120,5 +126,37 @@ public final class Utilities {
 	public static boolean isNewApi(){
 		Log.d(LOG_TAG,"Api version:"+Build.VERSION.SDK_INT);
 		return Build.VERSION.SDK_INT>=Build.VERSION_CODES.HONEYCOMB;
+	}
+	
+	public static boolean isNewPopup(int type,View anchor){
+		switch(type){
+			case POP_CONTEXT1:
+		        if(pop_c1==null){
+		            pop_c1=new PopupList(anchor);
+			        return true;
+		        }else return false;
+		    case POP_CONTEXT2:
+				if(pop_c2==null){
+					pop_c2=new PopupList(anchor);
+					return true;
+				}else return false;
+			case POP_APPS:
+				if(pop_apps==null){
+					pop_apps=new PopupList(anchor);
+					return true;
+				}else return false;
+		}
+		return false;
+	}
+	public static PopupList getPopupList(int type){
+		switch(type){
+			case POP_CONTEXT1:
+		        return pop_c1;
+		    case POP_CONTEXT2:
+				return pop_c2;
+			case POP_APPS:
+				return pop_apps;
+		}
+		return null;
 	}
 }

@@ -6,6 +6,8 @@
 		android:id="@+id/list_item"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-		android:padding="5dp"
-		android:textSize="22sp"/>
+		android:padding="@dimen/listitem_p"
+		android:textSize="@dimen/listitem_h"
+		android:textColor="#FFFF"
+		android:background="#3000"/>
 </FrameLayout>
