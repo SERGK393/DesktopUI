@@ -1,5 +1,7 @@
 package ru.k3.desktopui.db;
 
+import ru.k3.desktopui.R;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -11,10 +13,11 @@ import android.content.pm.ResolveInfo;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
+import java.util.ArrayList;
 
 public class DbManager extends SQLiteOpenHelper implements BaseColumns{
 	
-	public static final int DB_VERSION=2;
+	public static final int DB_VERSION=3;
 	
 	public static final String OBJ="obj";
 	public static final String TYPE="type";
@@ -24,33 +27,28 @@ public class DbManager extends SQLiteOpenHelper implements BaseColumns{
 	public static final String PARAM_3="param_3";
 	public static final String POSX="posx";
 	public static final String POSY="posy";
-	
-	public static final String MSETT="mysettings";
-	public static final String ICN_SZ="icon_size";
-	public static final String FNT_SZ="font_size";
-	public static final String BMP_Q="bmp_quality";
 		
-	Context context;
+	Context c;
 	PackageManager manager;
 	
 	public DbManager(Context c){
   	super(c,DbProvider.DB_MAIN,null,DB_VERSION);
-		context=c;
+		this.c=c;
 		manager=c.getPackageManager();
 	}
 
 	@Override
 	public void onCreate(SQLiteDatabase db){
 		loadObj(db);
-		loadMySettings(db);
 	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db,int olddb, int newdb){
 		switch(olddb){
 			case 1: db.execSQL("DROP TABLE IF EXISTS "+OBJ);
-		            db.execSQL("DROP TABLE IF EXISTS "+MSETT);
+				    db.execSQL("DROP TABLE IF EXISTS mysettings");
 		            onCreate(db);
+		    case 2: db.execSQL("DROP TABLE IF EXISTS mysettings");
 		}
 //		db.execSQL("DROP TABLE IF EXISTS "+OBJ);
 //		db.execSQL("DROP TABLE IF EXISTS "+MSETT);
@@ -67,37 +65,38 @@ public class DbManager extends SQLiteOpenHelper implements BaseColumns{
 
 	    ContentValues val=new ContentValues();
 	
-	    Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
-        mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-	    final List<ResolveInfo> apps = manager.queryIntentActivities(mainIntent, 0);
-	    Collections.sort(apps, new ResolveInfo.DisplayNameComparator(manager));
+	    final String[]categories={Intent.CATEGORY_APP_MARKET,Intent.ACTION_CALL_BUTTON,Intent.CATEGORY_APP_MESSAGING,Intent.CATEGORY_APP_BROWSER};
+		final ArrayList<ResolveInfo> apps=new ArrayList<ResolveInfo>();
+		
+		for(String cat:categories){
+			Intent intent = new Intent();
+			if(cat.contains(".category.")){
+			    intent.setAction(Intent.ACTION_MAIN);
+			    intent.addCategory(cat);
+			}else intent.setAction(cat);
+			List<ResolveInfo> apps1= manager.queryIntentActivities(intent, 0);
+			apps.addAll(apps1);
+		}
 
-    	if (apps != null) {
+    	int is=(int)c.getResources().getDimension(R.dimen.itm);
+		int fs=(int)c.getResources().getDimension(R.dimen.fnt);
+		
+		if (apps != null) {
 			int i=0;
+			
      	    for (ResolveInfo info:apps) {
-				if(!info.activityInfo.name.startsWith("com.android.")) continue;
+				boolean markt=(info.activityInfo.name.startsWith("com.android.vending"));
+				if(!markt&&i==0)i=3;
 				val.put(TYPE,1);
        	        val.put(NAME,info.loadLabel(manager).toString());
 		        val.put(PARAM_1,info.activityInfo.applicationInfo.packageName);
 		        val.put(PARAM_2,info.activityInfo.name);
-		        val.put(POSX,(i/4)*79+5);
-		        val.put(POSY,((i%4<4)?104*(i%4):0));
+		        val.put(POSX,(i/4)*(is+20)+5);
+		        val.put(POSY,((i%4<4)?(is+fs*3+25)*(i%4):0));
 		        db.insert(OBJ,NAME,val);
-				i++;
+				i+=4;
+				if(markt&&i==4)i--;
             }
 	    }
-	}
-	public void loadMySettings(SQLiteDatabase db){
-		db.execSQL("CREATE TABLE "+MSETT
-				   + "(_id INTEGER PRIMARY KEY AUTOINCREMENT, "
-				   + ICN_SZ + " INTEGER, " + FNT_SZ + " INTEGER, "
-				   + BMP_Q + " INTEGER);");
-
-		ContentValues val=new ContentValues();
-		val.put(ICN_SZ,60);
-		val.put(FNT_SZ,12);
-		val.put(BMP_Q,0);
-		
-		db.insert(MSETT,ICN_SZ,val);
 	}
 }

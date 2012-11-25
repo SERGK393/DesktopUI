@@ -1,12 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string-array name="context_menu">
-		<item>Open</item>
-		<item>Edit</item>
-		<item>Remove</item>
+		<item>Открыть</item>
+		<item>Изменить</item>
+		<item>Информация</item>
+		<item>Удалить</item>
 	</string-array>
 	<string-array name="empty_context_menu">
-		<item>Add</item>
-		<item>Wallpaper</item>
+		<item>Создать</item>
+		<item>Обои</item>
+		<item>Закрепить</item>
+		<item>Запуск</item>
+		<item>Настройки</item>
+	</string-array>
+
+	<string-array name="mst_ss_entr">
+		<item>По умолчанию</item>
+		<item>Нет</item>
+		<item>Очень быстро (250мс)</item>
+		<item>Быстро (500мс)</item>
+		<item>Средне (750мс)</item>
+		<item>Медленно (1250мс)</item>
+		<item>Очень медленно (2000мс)</item>
+	</string-array>
+	<string-array name="mst_ss_vals">
+		<item>-1</item>
+		<item>0</item>
+		<item>250</item>
+		<item>500</item>
+		<item>750</item>
+		<item>1250</item>
+		<item>2000</item>
+	</string-array>
+	<string-array name="mst_icden_entr">
+		<item>По умолчанию</item>
+		<item>LOW (120 dpi)</item>
+		<item>MEDIUM (160 dpi)</item>
+		<item>HIGH (240 dpi)</item>
+		<item>XHIGH (320 dpi)</item>
+		<item>XXHIGH (480 dpi)</item>
+	</string-array>
+	<string-array name="mst_icden_vals">
+		<item>0</item>
+		<item>120</item>
+		<item>160</item>
+		<item>240</item>
+		<item>320</item>
+		<item>480</item>
+	</string-array>
+	<string-array name="mst_wall_entr">
+		<item>Простые обои</item>
+		<item>Стандартные обои</item>
+		<item>Расширенные обои</item>
+	</string-array>
+	
+	<string-array name="mst_int3_vals">
+		<item>1</item>
+		<item>2</item>
+		<item>3</item>
 	</string-array>
 </resources>

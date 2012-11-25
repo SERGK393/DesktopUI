@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<dimen name="listitem_h">22sp</dimen>
-	<dimen name="listitem_p">5dp</dimen>
+	<dimen name="listitem_h">18sp</dimen>
+	<dimen name="listitem_p">7dp</dimen>
+	<dimen name="itm">60dp</dimen>
+	<dimen name="fnt">12dp</dimen>
 </resources>

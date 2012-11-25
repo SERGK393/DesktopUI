@@ -8,6 +8,5 @@
 		android:layout_height="wrap_content"
 		android:padding="@dimen/listitem_p"
 		android:textSize="@dimen/listitem_h"
-		android:textColor="#FFFF"
-		android:background="#3000"/>
+		android:textColor="#FFFF"/>
 </FrameLayout>

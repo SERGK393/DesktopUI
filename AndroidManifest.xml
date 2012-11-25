@@ -1,25 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-      package="ru.k3.desktopui"
-      android:versionCode="01" android:versionName="0.1">
-    <uses-sdk android:minSdkVersion="7" android:targetSdkVersion="15"/>
+    package="ru.k3.desktopui"
+    android:installLocation="internalOnly"
+    android:versionCode="06"
+    android:versionName="0.6" >
 
-    <application android:icon="@drawable/icon" android:label="@string/app_name" >
-        <activity android:name="ru.k3.desktopui.DesktopUI"
-                  android:theme="@style/Theme"
-				  android:stateNotNeeded="true"
-				  android:configChanges="orientation"
-        		  android:launchMode="singleInstance">
+    <uses-sdk
+        android:minSdkVersion="9"
+        android:targetSdkVersion="15" />
+
+    <uses-permission android:name="android.permission.SET_WALLPAPER_HINTS" />
+    <uses-permission android:name="android.permission.BIND_APPWIDGET" />
+
+    <application
+        android:name="ru.k3.desktopui.DUIApp"
+        android:icon="@drawable/icon"
+        android:label="@string/app_name" >
+        <activity
+            android:name="ru.k3.desktopui.DesktopUI"
+            android:clearTaskOnLaunch="true"
+            android:configChanges="orientation"
+            android:launchMode="singleTask"
+            android:stateNotNeeded="true"
+            android:theme="@style/Theme" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.HOME"/>
+
+                <category android:name="android.intent.category.HOME" />
                 <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <provider 
+        <activity
+            android:name="ru.k3.desktopui.Settings"
+            android:exported="true"
+            android:label="@string/sett_base"
+            android:theme="@style/Theme.Settings" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.PREFERENCE" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="ru.k3.desktopui.DUISettings"
+            android:exported="true"
+            android:label="@string/sett_my" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.PREFERENCE" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="ru.k3.desktopui.ErrorMonitor"
+            android:theme="@style/Theme.Error" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.INFO" />
+            </intent-filter>
+        </activity>
+
+        <provider
             android:name="ru.k3.desktopui.db.DbProvider"
-            android:authorities="ru.k3.desktopui.db.DbProvider">
+            android:authorities="ru.k3.desktopui.db.DbProvider"
+            android:exported="false" >
         </provider>
     </application>
+
 </manifest>

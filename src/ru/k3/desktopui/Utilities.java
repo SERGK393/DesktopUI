@@ -24,8 +24,13 @@ import android.graphics.*;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.Log;
-import android.widget.ArrayAdapter;
 import android.view.View;
+import java.util.*;
+import android.content.pm.*;
+import android.content.*;
+import android.preference.PreferenceManager;
+import android.content.res.Resources;
+import android.net.Uri;
 
 
 public final class Utilities {
@@ -34,14 +39,20 @@ public final class Utilities {
 	public static final int POP_CONTEXT1=1;
 	public static final int POP_CONTEXT2=2;
 	public static final int POP_APPS=4;
+	public static final int POP_ALL_APPS=8;
 	
-	private static PopupList pop_c1=null;
-	private static PopupList pop_c2=null;
-	private static PopupList pop_apps=null;
+	private static PopupElement pop_c1=null;
+	private static PopupElement pop_c2=null;
+	private static PopupElement pop_apps=null;
+	private static PopupElement pop_all_apps=null;
+	
+	private static List<ResolveInfo> apps_n;
  
     private static final Rect sOldBounds = new Rect();
     private static final Canvas sCanvas = new Canvas();
 	private static DesktopUI desk=null;
+	private static DeskView dv=null;
+	private static PackageManager man=null;
 	private static int sIconSize=-1;
 	private static Bitmap.Config quality=null;
 /*
@@ -51,6 +62,7 @@ public final class Utilities {
     }
 */
     public static Bitmap createIconBitmap(Drawable icon, Context context) {
+		if(icon==null)return null;
         synchronized (sCanvas) { // we share the statics :-(
             if (sIconSize==-1&&quality==null) initStatics(context);
 			if (sIconSize==-1&&quality==null) return null;
@@ -71,15 +83,27 @@ public final class Utilities {
         }
     }
 
-    private static void initStatics(Context context) {
+    public static void initStatics(Context context) {
 		if(desk==null)desk=(DesktopUI)context;
-        sIconSize=desk.getPref(0);
-		quality=desk.getPref(2)==0?Bitmap.Config.ARGB_4444:Bitmap.Config.ARGB_8888;
+		if(dv==null)dv=(DeskView)(desk.findViewById(R.id.desk));
+		if(man==null)man=desk.getPackageManager();
+        sIconSize=desk.getPrefInt(R.string.pref_is);
+		quality=desk.getPrefBool(R.string.pref_bq)?Bitmap.Config.ARGB_8888:Bitmap.Config.ARGB_4444;
     }
 	public static void resetStatics(){
 		sIconSize=-1;
 		quality=null;
 		desk=null;
+		dv=null;
+		man=null;
+		if(pop_apps!=null)pop_apps.resetAdapter();
+		pop_apps=null;
+		if(pop_c1!=null)pop_c1.resetAdapter();
+		pop_c1=null;
+		if(pop_c2!=null)pop_c2.resetAdapter();
+		pop_c2=null;
+		if(apps_n!=null)apps_n.clear();
+		apps_n=null;
 	}
 
     public static byte[] flattenBitmap(Bitmap bitmap) {
@@ -100,6 +124,10 @@ public final class Utilities {
 	
 	public static ArrayList<String> partString(Paint p,String s,int w){
 		ArrayList<String> a=new ArrayList<String>();
+		if (s==null){
+			a.add("n/a");
+			return a;
+		}
 		Rect b=new Rect();
 		int len=s.length();
 		for(int i=1,j=0,k=0;i<=len;i++){
@@ -124,31 +152,76 @@ public final class Utilities {
 	}
 	
 	public static boolean isNewApi(){
-		Log.d(LOG_TAG,"Api version:"+Build.VERSION.SDK_INT);
-		return Build.VERSION.SDK_INT>=Build.VERSION_CODES.HONEYCOMB;
+		return Build.VERSION.SDK_INT>=11;
+	}
+	public static boolean isFromApi15(){
+		return Build.VERSION.SDK_INT>=15;
+	}
+	
+	public static DesktopUI getDesktopUI(){
+		return desk;
+	}
+	
+	public static void invalidate(){
+		if(dv!=null)dv.postInvalidate();
+	}
+	
+	public static void execAppInfo(Obj it){
+		try
+		{
+			String appPackage = it.getPackage();
+			if ( appPackage != null && desk != null)
+			{
+				Intent intent = new Intent();
+				final int apiLevel = Build.VERSION.SDK_INT;
+				if (apiLevel >= 9)
+				{ // above 2.3
+					intent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
+					Uri uri = Uri.fromParts("package", appPackage, null);
+					intent.setData(uri);
+				}
+				else
+				{ // below 2.3
+					final String appPkgName = (apiLevel == 8 ? "pkg" : "com.android.settings.ApplicationPkgName");
+					intent.setAction(Intent.ACTION_VIEW);
+					intent.setClassName("com.android.settings", "com.android.settings.InstalledAppDetails");
+					intent.putExtra(appPkgName, appPackage);
+				}
+				desk.startActivity(intent);
+			}
+		}
+		catch (Exception e)
+		{
+			// failed to tell start app info
+		}
 	}
 	
 	public static boolean isNewPopup(int type,View anchor){
 		switch(type){
 			case POP_CONTEXT1:
 		        if(pop_c1==null){
-		            pop_c1=new PopupList(anchor);
+		            pop_c1=new PopupElement(anchor);
 			        return true;
 		        }else return false;
 		    case POP_CONTEXT2:
 				if(pop_c2==null){
-					pop_c2=new PopupList(anchor);
+					pop_c2=new PopupElement(anchor);
 					return true;
 				}else return false;
 			case POP_APPS:
 				if(pop_apps==null){
-					pop_apps=new PopupList(anchor);
+					pop_apps=new PopupElement(anchor);
+					return true;
+				}else return false;
+			case POP_ALL_APPS:
+				if(pop_all_apps==null){
+					pop_all_apps=new PopupElement(anchor);
 					return true;
 				}else return false;
 		}
 		return false;
 	}
-	public static PopupList getPopupList(int type){
+	public static PopupElement getPopupList(int type){
 		switch(type){
 			case POP_CONTEXT1:
 		        return pop_c1;
@@ -156,7 +229,51 @@ public final class Utilities {
 				return pop_c2;
 			case POP_APPS:
 				return pop_apps;
+			case POP_ALL_APPS:
+				return pop_all_apps;
 		}
 		return null;
+	}
+	public static List<ResolveInfo> getResolveInfos(int type){
+		switch(type){
+			case POP_APPS:
+			    Intent intent_n = new Intent(Intent.ACTION_MAIN, null);
+				intent_n.addCategory(Intent.CATEGORY_LAUNCHER);
+
+		        boolean newl=false;
+				if(apps_n==null)newl=true;
+				else if(apps_n.isEmpty()){
+					apps_n=null;
+					newl=true;
+				}
+				if(newl){
+					apps_n = man.queryIntentActivities(intent_n, 0);
+					Collections.sort(apps_n, new ResolveInfo.DisplayNameComparator(man));
+		        }
+				return apps_n;
+		}
+		return null;
+	}
+	
+	public static void sharedToDefault(Context c){
+		SharedPreferences.Editor sh=PreferenceManager.getDefaultSharedPreferences(c).edit();
+		Resources res=c.getResources();
+		sh.clear();
+		sh.putBoolean(res.getString(R.string.pref_bq),false);
+		sh.putString(res.getString(R.string.pref_is),String.valueOf((int)res.getDimension(R.dimen.itm)));
+		sh.putString(res.getString(R.string.pref_fs),String.valueOf((int)res.getDimension(R.dimen.fnt)));
+		sh.putBoolean(res.getString(R.string.pref_actionbar),false);
+		sh.putBoolean(res.getString(R.string.pref_cs),false);
+		sh.putString(res.getString(R.string.pref_ss),"-1");
+		sh.putBoolean(res.getString(R.string.pref_icres),false);
+		sh.putString(res.getString(R.string.pref_icdensity),"320");
+		sh.putString(res.getString(R.string.pref_wall),"2");
+		sh.putBoolean(res.getString(R.string.pref_iccache),false);
+		sh.putBoolean(res.getString(R.string.pref_icdraw),false);
+		sh.putBoolean(res.getString(R.string.pref_icdelload),true);
+		
+		sh.putInt(res.getString(R.string.prefex_defx),0);
+		sh.putInt(res.getString(R.string.prefex_defy),0);
+		sh.apply();
 	}
 }

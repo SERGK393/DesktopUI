@@ -16,7 +16,6 @@ public class DbProvider extends ContentProvider{
   public static final String DB_MAIN="main.db";
   
   public static final Uri URI_OBJ=Uri.parse("content://ru.k3.desktopui.db.DbProvider/obj");
-  public static final Uri URI_MSETT=Uri.parse("content://ru.k3.desktopui.db.DbProvider/mysettings");
   public static final int URI_CODE=1;
   public static final int URI_CODE_ID=2;
   
@@ -29,8 +28,6 @@ public class DbProvider extends ContentProvider{
      umatch=new UriMatcher(UriMatcher.NO_MATCH);
      umatch.addURI("ru.k3.desktopui.db.DbProvider/obj",DbManager.OBJ,URI_CODE);
      umatch.addURI("ru.k3.desktopui.db.DbProvider/obj",DbManager.OBJ+"/#",URI_CODE_ID);
-	  umatch.addURI("ru.k3.desktopui.db.DbProvider/mysettings",DbManager.MSETT,URI_CODE);
-	  umatch.addURI("ru.k3.desktopui.db.DbProvider/mysettings",DbManager.MSETT+"/#",URI_CODE_ID);
      
      map=new HashMap<String,String>();
      map.put(DbManager._ID,DbManager._ID);
@@ -41,10 +38,6 @@ public class DbProvider extends ContentProvider{
 	 map.put(DbManager.PARAM_3,DbManager.PARAM_3);
 	 map.put(DbManager.POSX,DbManager.POSX);
 	 map.put(DbManager.POSY,DbManager.POSY);
-	 
-	 map.put(DbManager.ICN_SZ,DbManager.ICN_SZ);
-	 map.put(DbManager.FNT_SZ,DbManager.ICN_SZ);
-	 map.put(DbManager.BMP_Q,DbManager.BMP_Q);
   }
   
   @Override
@@ -63,7 +56,7 @@ public class DbProvider extends ContentProvider{
   public Uri insert(Uri url,ContentValues inval){
      ContentValues val=new ContentValues(inval);
      
-	  long rowId=db.insert(getType(url),url.equals(URI_OBJ)?DbManager.NAME:DbManager.ICN_SZ,val);
+	  long rowId=db.insert(getType(url),url.equals(URI_OBJ)?DbManager.NAME:null,val);
      if(rowId>0){
        Uri uri=ContentUris.withAppendedId(url,rowId);
        getContext().getContentResolver().notifyChange(uri,null);
@@ -89,6 +82,6 @@ public class DbProvider extends ContentProvider{
   
   @Override
   public String getType(Uri url){
-	  return url.equals(URI_OBJ)?DbManager.OBJ:url.equals(URI_MSETT)?DbManager.MSETT:null;
+	  return url.equals(URI_OBJ)?DbManager.OBJ:null;
   }
 }

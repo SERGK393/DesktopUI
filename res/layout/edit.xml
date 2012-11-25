@@ -1,80 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:id="@+id/edit_view"
-	android:layout_width="fill_parent"
-	android:layout_height="fill_parent"
-	android:orientation="vertical">
-	<LinearLayout
-		android:layout_width="fill_parent"
-		android:layout_height="fill_parent"
-		android:orientation="vertical">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/edit_view"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
 
-		<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="@string/edit_n"/>
-		<LinearLayout
-			android:layout_width="fill_parent"
-			android:layout_height="fill_parent"
-			android:orientation="horizontal">
-			<EditText
-				android:layout_width="fill_parent"
-				android:layout_height="wrap_content"
-				android:singleLine="true"
-				android:layout_weight="0.2"
-				android:id="@+id/edit_n"/>
-			<ImageButton
-				android:layout_width="fill_parent"
-				android:layout_height="wrap_content"
-				android:layout_weight="0.8"
-				android:src="@android:drawable/arrow_down_float"
-				android:id="@+id/edit_n_srch"/>
-		</LinearLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/edit_n" />
 
-		<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="@string/edit_p1"/>
-		<LinearLayout
-			android:layout_width="fill_parent"
-			android:layout_height="fill_parent"
-			android:orientation="horizontal">
-			<EditText
-				android:layout_width="fill_parent"
-				android:layout_height="wrap_content"
-			    android:singleLine="true"
-				android:layout_weight="0.2"
-				android:id="@+id/edit_p1"/>
-			<ImageButton
-				android:layout_width="fill_parent"
-				android:layout_height="wrap_content"
-				android:layout_weight="0.8"
-				android:src="@android:drawable/arrow_down_float"
-				android:id="@+id/edit_p1_srch"/>
-		</LinearLayout>
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="horizontal" >
 
-		<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="@string/edit_p2"/>
-		<LinearLayout
-			android:layout_width="fill_parent"
-			android:layout_height="fill_parent"
-			android:orientation="horizontal">
-			<EditText
-				android:layout_width="fill_parent"
-				android:layout_height="wrap_content"
-				android:singleLine="true"
-				android:layout_weight="0.2"
-				android:id="@+id/edit_p2"/>
-			<ImageButton
-				android:layout_width="fill_parent"
-				android:layout_height="wrap_content"
-				android:layout_weight="0.8"
-				android:src="@android:drawable/arrow_down_float"
-				android:id="@+id/edit_p2_srch"/>
-		</LinearLayout>
+        <EditText
+            android:id="@+id/edit_n"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.2"
+            android:inputType="text"
+            android:singleLine="true" />
 
-	</LinearLayout>
+        <ImageButton
+            android:id="@+id/edit_n_srch"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.8"
+            android:src="@android:drawable/arrow_down_float" />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/edit_p1" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="horizontal" >
+
+        <EditText
+            android:id="@+id/edit_p1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.2"
+            android:inputType="text"
+            android:singleLine="true" />
+
+        <ImageButton
+            android:id="@+id/edit_p1_srch"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.8"
+            android:src="@android:drawable/arrow_down_float" />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/edit_p2" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="horizontal" >
+
+        <EditText
+            android:id="@+id/edit_p2"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.2"
+            android:inputType="text"
+            android:singleLine="true" />
+
+        <ImageButton
+            android:id="@+id/edit_p2_srch"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.8"
+            android:src="@android:drawable/arrow_down_float" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/edit_save"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/save" />
+
 </LinearLayout>

@@ -4,10 +4,10 @@
 		android:icon="@android:drawable/ic_menu_add"
 		android:title="@string/add"
 		android:showAsAction="collapseActionView"/>
-    <item android:id="@+id/mysett"
-		android:icon="@android:drawable/ic_menu_manage"
-		android:title="@string/mysett_m"
-		android:showAsAction="always"/>
+    <item android:id="@+id/wall"
+		android:icon="@android:drawable/ic_menu_gallery"
+		android:title="@string/wall"
+		android:showAsAction="collapseActionView"/>
     <item android:id="@+id/srch"
 		android:icon="@android:drawable/ic_menu_search"
 		android:title="@string/srch"
@@ -15,13 +15,13 @@
     <item android:id="@+id/apps"
 		android:icon="@android:drawable/ic_menu_sort_alphabetically"
 		android:title="@string/apps"
-		android:showAsAction="always"/>
+		android:showAsAction="collapseActionView"/>
     <item android:id="@+id/sett"
 		android:icon="@android:drawable/ic_menu_preferences"
 		android:title="@string/sett"
-		android:showAsAction="always"/>
-    <item android:id="@+id/exit"
-		android:icon="@android:drawable/ic_menu_close_clear_cancel"
-		android:title="@string/exit_m"
-		android:showAsAction="always"/>
+		android:showAsAction="collapseActionView"/>
+    <item android:id="@+id/restart"
+		android:icon="@android:drawable/ic_menu_revert"
+		android:title="@string/restart"
+		android:showAsAction="collapseActionView"/>
 </menu>

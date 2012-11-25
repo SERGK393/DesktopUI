@@ -2,19 +2,18 @@ package ru.k3.desktopui;
 
 import android.view.View;
 import android.view.View.OnTouchListener;
-import android.view.ViewGroup.LayoutParams;
 import android.view.MotionEvent;
 import android.view.WindowManager;
 import android.widget.ListView;
 import android.widget.PopupWindow;
-import android.graphics.drawable.Drawable;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.view.Gravity;
 import android.content.Context;
 import android.widget.ArrayAdapter;
+import android.graphics.Bitmap;
 
-public class PopupList{
+public class PopupElement{
     private int width;
 	private String max="";
 
@@ -26,7 +25,7 @@ public class PopupList{
 	private ListView lv;
 	protected final WindowManager windowManager;
 
-	public PopupList(View anchor) {
+	public PopupElement(View anchor) {
 		this.anchor = anchor;
 		c=anchor.getContext();
 		adapt=new ArrayAdapter<String>(c,R.layout.listitem,R.id.list_item);
@@ -39,10 +38,9 @@ public class PopupList{
 		// when a touch even happens outside of the window
 		// make the window go away
 		window.setTouchInterceptor(new OnTouchListener() {
-				@Override
 				public boolean onTouch(View v, MotionEvent event) {
 					if (event.getAction() == MotionEvent.ACTION_OUTSIDE) {
-						PopupList.this.window.dismiss();
+						PopupElement.this.window.dismiss();
 
 						return true;
 					}
@@ -72,7 +70,7 @@ public class PopupList{
 		if(width>0)
 		    this.width=width;
 		else
-		    this.width=(int)(anchor.getContext().getResources().getDimension(R.dimen.listitem_h)-2)*max.length();
+		    this.width=(int)(anchor.getContext().getResources().getDimension(R.dimen.listitem_h)-4)*max.length();
 	}
 
 	/**
@@ -86,6 +84,7 @@ public class PopupList{
 	 */
 	protected void onShow() {}
 
+	@SuppressWarnings("deprecation")
 	protected void preShow() {
 		if (root == null) {
 			throw new IllegalStateException("setContentView was not called with a view to display.");
@@ -93,12 +92,14 @@ public class PopupList{
 
 		onShow();
 
-//		window.setBackgroundDrawable(new BitmapDrawable());
+		window.setBackgroundDrawable(new BitmapDrawable(Bitmap.createBitmap(new int[]{0xFF333333},1,1,Bitmap.Config.ARGB_4444)));
 
 		// if using PopupWindow#setBackgroundDrawable this is the only values of the width and hight that make it work
 		// otherwise you need to set the background of the root viewgroup
 		// and set the popupwindow background to an empty BitmapDrawable
 
+		lv.scrollTo(0,0);
+		
 		window.setWidth(width);
 		window.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
 		window.setTouchable(true);
@@ -180,7 +181,7 @@ public class PopupList{
 					 + anchor.getHeight());
 
 		int rootWidth 		= width;//root.getWidth();
-		int rootHeight 		= (adapt.getCount()+1)*(int)(c.getResources().getDimension(R.dimen.listitem_h)+c.getResources().getDimension(R.dimen.listitem_p));//root.getHeight();
+		int rootHeight 		= lv.getHeight();//*(int)(c.getResources().getDimension(R.dimen.listitem_h)+c.getResources().getDimension(R.dimen.listitem_p)*2);//root.getHeight();
 
 //		int screenWidth 	= windowManager.getDefaultDisplay().getWidth();
 		//int screenHeight 	= windowManager.getDefaultDisplay().getHeight();
@@ -200,5 +201,9 @@ public class PopupList{
 
 	public void dismiss() {
 		window.dismiss();
+	}
+	
+	public boolean visible(){
+		return window.isShowing();
 	}
 }
