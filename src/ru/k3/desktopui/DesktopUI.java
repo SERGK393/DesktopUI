@@ -1,6 +1,7 @@
 package ru.k3.desktopui;
 
 import ru.k3.desktopui.db.*;
+import ru.k3.desktopui.r.*;
 
 import android.annotation.SuppressLint;
 import android.app.*;
@@ -45,7 +46,8 @@ public class DesktopUI extends Activity implements DeskView.Events
 	
 	private static AsyncTask<DesktopUI, Void, Void> task;
 
-    private Cursor dbo;
+//    private MainReceiver receiver;
+	private Cursor dbo;
 	private DeskView dv;
 	private WidgetSpace ws;
 	private ImageView wall;
@@ -73,10 +75,14 @@ public class DesktopUI extends Activity implements DeskView.Events
     @Override
     public void onCreate(Bundle state)
 	{
+		if(getPrefInt(R.string.pref_is)<0)Utilities.sharedToDefault(getApplicationContext());
+		if(getPrefBool(R.string.pref_oldtheme)&&Utilities.isNewApi())
+			setTheme(R.style.Theme_Old_WithActionBar);
 		super.onCreate(state);
 		if(checkErrors())return;
 		Log.d(LOG_TAG,"-------STARTED-------");
 
+		registerMainReceiver();
 		createActionBar();
 //		setRequestedOrientation(Configuration.ORIENTATION_PORTRAIT);
 //		android.R.style
@@ -86,7 +92,6 @@ public class DesktopUI extends Activity implements DeskView.Events
 		wall=(ImageView)findViewById(R.id.wall);
 		dv.setEvents(this);
 		dv.setWidgetSpace(ws);
-		if(getPrefInt(R.string.pref_is)<0)Utilities.sharedToDefault(getApplicationContext());
 		checkWallpaper();
 		initDeskPosition();
 //		getWindow().setBackgroundDrawable(new Wallpaper(peekWallpaper()));
@@ -139,9 +144,10 @@ public class DesktopUI extends Activity implements DeskView.Events
 		Log.d(LOG_TAG,"onStop");
 		Utilities.resetStatics();
 //		dv.clear();
-		dv.flushUnVisibles();
+//		dv.flushUnVisibles();
 //		dv.invalidate();
 		saveDeskPosition();
+		System.gc();
 		super.onStop();
 	}
 	
@@ -164,6 +170,11 @@ public class DesktopUI extends Activity implements DeskView.Events
 		    titleParent.removeViewInLayout(titleBar);
 		}
 //		titleBar.setBackgroundColor(0x77FFFFFF);
+	}
+	
+	private void registerMainReceiver(){
+		final IntentFilter intf=new IntentFilter(Intent.ACTION_EXTERNAL_APPLICATIONS_AVAILABLE);
+		registerReceiver(new MainReceiver(),intf);
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -316,6 +327,17 @@ public class DesktopUI extends Activity implements DeskView.Events
 	@Override
 	public void onBackPressed(){
 		dv.scroll(DEFX,DEFY);
+	}
+	
+	@Override
+	public void onNewIntent(Intent intent){
+		if (Intent.ACTION_MAIN.equals(intent.getAction())) {
+
+            boolean alreadyOnHome = ((intent.getFlags() & Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT)
+                        != Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
+			if(alreadyOnHome)
+				openOptionsMenu();
+        }
 	}
 	
 	@Override

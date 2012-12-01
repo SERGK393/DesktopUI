@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">DesktopUI</string>
-    <string name="sett_base">DUI - общие настройки</string>
-    <string name="sett_my">DUI - настройки приложения</string>
+    <string name="sett_base">Общие настройки</string>
+    <string name="sett_my">Настройки DesktopUI</string>
+    <string name="error_mon">ErrorMonitorDUI</string>
 		
     <string name="add">Добавить</string>
 	<string name="wall">Обои</string>
@@ -25,26 +26,19 @@
 	<string name="mst_scr_icons">Настройки иконок</string>
 	<string name="mst_itmsize">Размер иконок</string>
 	<string name="mst_fntsize">Размер шрифта</string>
+	<string name="mst_bmp_quality">Высокое качество</string>
 	<string name="mst_res_icons">Брать другие иконки</string>
 	<string name="mst_res_icons_density">Плотность иконок</string>
-	<string name="mst_scr_icdraw">Опции отрисовки</string>
-	<string name="mst_bmp_quality">Высокое качество</string>
-	<string name="mst_cache_clear">Очищать кеш иконок</string>
-	<string name="mst_icdraw_onscreen">Сокращенное рисование</string>
-	<string name="mst_icdelay_load">Отложенная загрузка</string>
 	<string name="mst_reset">Сбросить всё</string>
 	<string name="mst_scr_scroll">Настройки прокрутки</string>
 	<string name="mst_cicle_scroll">Циклическая прокрутка</string>
 	<string name="mst_scroll_speed">Скорость прокрутки</string>
 	<string name="mst_wall_mode">Режим обоев</string>
 	<string name="mst_actionbar">Показать панель</string>
+	<string name="mst_oldtheme">Старая тема</string>
 
 	<string name="mst_scr_icons_sum">Размер иконок, размер шрифта, опции отрисовки</string>
 	<string name="mst_scr_scroll_sum">Циклическая прокрутка, скорость</string>
-	<string name="mst_bmp_quality_sum">Низкое качество иконок экономит память</string>
-	<string name="mst_cache_clear_sum">Очищаются иконки за пределами видимости</string>
-	<string name="mst_icdraw_onscreen_sum">Иконки рисуются и загружаются только когда они видны</string>
-	<string name="mst_icdelay_load_sum">Уменьшает фризы при загрузке</string>
 
 	<string name="pref_icons_category">icons_</string>
 	<string name="pref_is">icons_iconsize</string>
@@ -52,15 +46,13 @@
 	<string name="pref_icres">icons_icresource</string>
 	<string name="pref_icdensity">icons_icdensity</string>
 	<string name="pref_bq">icons_bmpquality</string>
-	<string name="pref_iccache">icons_icclearcache</string>
-	<string name="pref_icdraw">icons_icdrawonscreen</string>
-	<string name="pref_icdelload">icons_icdelayload</string>
 	<string name="pref_scroll_category">scroll_</string>
 	<string name="pref_cs">scroll_ciclescroll</string>
 	<string name="pref_ss">scroll_scrollspeed</string>
 	<string name="pref_wall_category">wallpaper_</string>
 	<string name="pref_wall">wallpaper_mode</string>
 	<string name="pref_actionbar">actionbar</string>
+	<string name="pref_oldtheme">oldtheme</string>
 
 	<string name="prefex_defx">defx</string>
 	<string name="prefex_defy">defy</string>

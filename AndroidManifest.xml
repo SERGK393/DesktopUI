@@ -54,13 +54,20 @@
         </activity>
         <activity
             android:name="ru.k3.desktopui.ErrorMonitor"
+            android:label="@string/error_mon"
             android:theme="@style/Theme.Error" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.INFO" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+		
+		<receiver android:name="ru.k3.desktopui.r.MainReceiver">
+<!-->			<intent-filter>
+				<action android:name="android.intent.action.ACTION_SCREEN_OFF"/>
+			</intent-filter>
+<-->	    </receiver>
 
         <provider
             android:name="ru.k3.desktopui.db.DbProvider"

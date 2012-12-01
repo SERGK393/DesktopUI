@@ -16,7 +16,7 @@ import android.view.View.MeasureSpec;
 public class ObjItem implements Obj{
 	private static final String LOG_TAG="DesktopUI.Obj";
 
-	private final Rect zone;
+	private final Rect zone,minizone;
 	private final AppWidgetHostView wv;
 	private final IconCache icc;
 	private final ComponentName comp;
@@ -36,6 +36,8 @@ public class ObjItem implements Obj{
 		this.zone=zone;
 		w=(short)(zone.right-zone.left);
 		h=(short)(zone.bottom-zone.top);
+		this.minizone=new Rect();
+		updateMinizone();
 		this.fh=(short)fh;
 		this.icc=icc;
 		txt=new Paint();
@@ -51,9 +53,9 @@ public class ObjItem implements Obj{
 			case 1: this.type = Obj.Type.APP;
 				this.comp = new ComponentName(p1, p2);
 				start = new Intent(Intent.ACTION_MAIN);
-				start.addCategory(Intent.CATEGORY_LAUNCHER);
+//				start.addCategory(Intent.CATEGORY_LAUNCHER);
 				start.setComponent(comp);
-				start.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+//				start.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
 				break;
 			default: this.type = Obj.Type.UNK;
 				this.comp = null;
@@ -74,6 +76,7 @@ public class ObjItem implements Obj{
 	public ObjItem(Rect zone,AppWidgetHostView wv,int id){
 		Log.d(LOG_TAG,"Creating widget object "+id);
 		this.zone=zone;
+		this.minizone=zone;
 		this.wv=wv;
 		this.id=id;
 		this.type=Obj.Type.APPWIDGET;
@@ -98,15 +101,9 @@ public class ObjItem implements Obj{
 	}
 
 	public void draw(Canvas c){
-		if(type!=Obj.Type.APPWIDGET){
-		    c.drawBitmap(icc.getIcon(comp),zone.left,zone.top,icp);
-		    for(int i=0;i<title.size();i++){
-		        c.drawText(title.get(i),zone.left+w/2,zone.bottom+fh+fh*i,txt);
-		    }
-		}else {
-			c.drawRect(zone,icp);
-//			wv.draw(c);
-		}
+		c.drawBitmap(icc.getIcon(comp),zone.left,zone.top,icp);
+		for(int i=0;i<title.size();i++)
+		    c.drawText(title.get(i),zone.left+w/2,zone.bottom+fh+fh*i,txt);
 	}
 	public boolean contains(int x,int y){
 		return zone.contains(x,y);
@@ -130,9 +127,10 @@ public class ObjItem implements Obj{
 	}
 
 	public void setPos(int x,int y){
-		if(!zone.contains(x+w/2,y+w/2)||mov){
+		if(mov||!minizone.contains(x+w/2,y+w/2)){
 		    zone.set(x,y,x+w,y+h);
 		    correctAbsoluteCoords();
+			updateMinizone();
 			mov=true;
 		}
 	}
@@ -204,5 +202,8 @@ public class ObjItem implements Obj{
 	private void correctAbsoluteCoords(){
 		ar=zone.right+lw/2;
 		ab=zone.bottom+fh*sn+lb;
+	}
+	private void updateMinizone(){
+		minizone.set(zone.left+w/4,zone.top+h/4,zone.right-w/4,zone.bottom-h/4);
 	}
 }

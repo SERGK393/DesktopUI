@@ -31,6 +31,7 @@ import android.util.Log;
 import android.content.res.Resources;
 import android.content.pm.ActivityInfo;
 import android.os.AsyncTask;
+import java.util.Iterator;
 
 /**
  * Cache of application icons.  Icons can be made from any thread.
@@ -41,8 +42,11 @@ public class IconCache {
 	
 	private static final int INITIAL_ICON_CACHE_CAPACITY = 50;
 
-    private static class CacheEntry {
+    private static IconCache sIconCache=null;
+	
+	private static class CacheEntry {
         public Bitmap icon;
+		public Reference<Bitmap> ref;
 //		public Bitmap small;
     }
 	private static class AsyncEntry{
@@ -54,27 +58,32 @@ public class IconCache {
 		ComponentName c;
 	}
 
-    private final Bitmap mDefaultIcon;
+    private Bitmap mDefaultIcon;
+	
     private final Context mContext;
     private final PackageManager mPackageManager;
-    private final HashMap<ComponentName, Reference<CacheEntry>> mCache =
-            new HashMap<ComponentName, Reference<CacheEntry>>(INITIAL_ICON_CACHE_CAPACITY);
+    private final HashMap<ComponentName, CacheEntry> mCache =
+            new HashMap<ComponentName, CacheEntry>(INITIAL_ICON_CACHE_CAPACITY);
 	
-	private boolean res_icon,delload;
+	private boolean res_icon;
 	private int res_density;
+	
+	public static IconCache getInstance(Context c){
+		if(sIconCache==null&&c!=null)sIconCache=new IconCache(c);
+		return sIconCache;
+	}
 
-    public IconCache(Context context) {
+    private IconCache(Context context) {
 		Log.d(LOG_TAG,"Create");
         mContext = context;
         mPackageManager = context.getPackageManager();
-        mDefaultIcon = makeDefaultIcon();
     }
 	
 	public void setSettings(){
 		DesktopUI d=(DesktopUI)mContext;
 		res_icon=d.getPrefBool(R.string.pref_icres);
 		res_density=d.getPrefInt(R.string.pref_icdensity);
-		delload=d.getPrefBool(R.string.pref_icdelload);
+        mDefaultIcon = makeDefaultIcon(mContext);
 	}
 
     public Bitmap getDefaultIcon() {
@@ -85,16 +94,18 @@ public class IconCache {
     	return mContext;
     }
 
-    private Bitmap makeDefaultIcon() {
-        Drawable d = mPackageManager.getDefaultActivityIcon();
-        Bitmap b = Bitmap.createBitmap(Math.max(d.getIntrinsicWidth(), 1),
-                Math.max(d.getIntrinsicHeight(), 1),
-                Bitmap.Config.ARGB_8888);
-        Canvas c = new Canvas(b);
-        d.setBounds(0, 0, b.getWidth(), b.getHeight());
-        d.draw(c);
-        return b;
+    private Bitmap makeDefaultIcon(Context c) {
+        return Utilities.createIconBitmap(mPackageManager.getDefaultActivityIcon(),c);
     }
+	
+	public void clearDefaultIcons(){
+		Iterator<ComponentName> it=mCache.keySet().iterator();
+		while(it.hasNext()){
+			Log.i(LOG_TAG,"Iterator.hasNext()");
+			CacheEntry e=mCache.get(it.next());
+			if(isDefaultIcon((e.icon)))e.icon=null;
+		}
+	}
 
     /**
      * Remove any records for the supplied ComponentName.
@@ -119,30 +130,25 @@ public class IconCache {
     }
 
     public void addToCache(ComponentName componentName, String title, Bitmap icon) {
-    	Reference<CacheEntry> ref=mCache.get(componentName);
-    	if (ref == null) {
-            ref = new SoftReference<CacheEntry>(new CacheEntry());
+    	CacheEntry en=mCache.get(componentName);
+    	if (en == null) {
+            en = new CacheEntry();
         }
-        CacheEntry entry = ref.get();
-        if (entry == null) {
-            entry = new CacheEntry();
-        }
-        mCache.put(componentName, ref);
+        mCache.put(componentName, en);
 
-        entry.icon = icon;
+        en.icon = icon;
     }
 
     public Bitmap getIcon(ComponentName component) {
         synchronized (mCache) {
-        	Reference<CacheEntry> ref=mCache.get(component);
-            CacheEntry entry;
-            if (component == null||ref==null||(entry=ref.get())==null||entry == null || entry.icon == null) {
+        	CacheEntry en=mCache.get(component);
+            if (component == null||en==null||en.icon == null) {
 	            if (component == null) {
 	                return mDefaultIcon;
 	            }
 	            return cacheLocked(component).icon;
             } else {
-	            return entry.icon;
+	            return en.icon;
             }
         }
     }
@@ -172,7 +178,7 @@ public class IconCache {
 			try{
 			    d=mPackageManager.getActivityIcon(componentName);
 		    }catch (PackageManager.NameNotFoundException e){
-				d=mPackageManager.getDefaultActivityIcon();
+				d=null;
 			}
 			return d;
 		}
@@ -192,45 +198,45 @@ public class IconCache {
 				return getResIcon(res,icId);
 			}
 		}
-		return mPackageManager.getDefaultActivityIcon();
+		return null;
 	}
 
     private CacheEntry cacheLocked(ComponentName componentName) {
-    	Reference<CacheEntry> ref=mCache.get(componentName);
-    	if (ref == null) {
-            ref = new SoftReference<CacheEntry>(new CacheEntry());
+    	CacheEntry en=mCache.get(componentName);
+    	if (en == null) {
+            en = new CacheEntry();
         }
-        CacheEntry entry = ref.get();
-        if (entry == null) {
-            entry = new CacheEntry();
-        }
-        mCache.put(componentName, ref);
+        mCache.put(componentName, en);
         
-        if ( entry.icon == null ) {
+        if (en.icon == null || en.icon.isRecycled()) 
             try
 			{
-				if(delload)new LoadIcon().execute(new AsyncEntry(entry,componentName));
-				else entry.icon = Utilities.createIconBitmap(getActivityIcon(componentName), mContext);
-				if(entry.icon==null) throw new Exception();
+				en.icon = mDefaultIcon;
+				new LoadIcon().execute(new AsyncEntry(en,componentName));
+//				en.icon = Utilities.createIconBitmap(getActivityIcon(componentName), mContext);
+				if(en.icon==null || en.icon.isRecycled()) throw new Exception();
 			}
 			catch (Exception e)
 			{
-				entry.icon = mDefaultIcon;
+				Log.e(LOG_TAG,"CacheLocked function failed: en="+en+" en.icon="+en.icon);
+				en.icon = mDefaultIcon;
 			}
-        }else if(entry.icon.isRecycled())
-        			entry.icon=mDefaultIcon;
+			Log.d(LOG_TAG,"Cache size: "+mCache.size());
         
-        return entry;
+        return en;
     }
 	
 	private class LoadIcon extends AsyncTask<AsyncEntry,Void,Void>
 	{
 
-		protected Void doInBackground(AsyncEntry... e)
+		protected Void doInBackground(AsyncEntry... ae)
 		{
-			e[0].e.icon = mDefaultIcon;
-			e[0].e.icon = Utilities.createIconBitmap(getActivityIcon(e[0].c), mContext);
+			Log.d(LOG_TAG,"AsyncTask started: ae[0]="+ae[0]);
+			ae[0].e.icon = Utilities.createIconBitmap(getActivityIcon(ae[0].c), mContext);
+			if(ae[0].e.icon==null) ae[0].e.icon=mDefaultIcon;
 			Utilities.invalidate();
+			Log.d(LOG_TAG,"AsyncTask ended: ae[0]="+ae[0]+
+			              " ae[0].e.icon="+ae[0].e.icon);
 			return null;
 		}
 

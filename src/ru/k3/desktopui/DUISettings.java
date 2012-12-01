@@ -26,7 +26,10 @@ public class DUISettings extends PreferenceActivity
 		pr.setTitle(R.string.mst_reset);
 		scr.addPreference(pr);
 		
-		if(!Utilities.isNewApi())scr.removePreference(scr.findPreference(getString(R.string.pref_actionbar)));
+		if(!Utilities.isNewApi()){
+			scr.removePreference(scr.findPreference(getString(R.string.pref_actionbar)));
+			scr.removePreference(scr.findPreference(getString(R.string.pref_oldtheme)));
+		}
         if(!Utilities.isFromApi15())((PreferenceScreen)findPreference(getString(R.string.pref_icons_category))).removePreference(findPreference(getString(R.string.pref_icdensity)));
 		else{
 			Preference icres=findPreference(getString(R.string.pref_icdensity));

@@ -35,11 +35,10 @@ public class DeskView extends View
 	private int sw,sh;//screen width/height
 	private int sw1,sh1;
 	private int ss;//scroll speed
-	private boolean cs,fc;//cicle scroll,flush cache unvisibles
+	private boolean cs,wm;//cicle scroll, wallpaper mode
 	private int is,fh;//icon size, font height
 	private int mtx,mty;//move touching
 	private boolean mox,moy;//move out
-	private boolean ds;//draw on screen
 	
 	public DeskView(Context co, AttributeSet attrs){
 		super(co,attrs);
@@ -50,7 +49,7 @@ public class DeskView extends View
 //		setDrawingCacheEnabled(true);
 //		setDrawingCacheQuality(DRAWING_CACHE_QUALITY_LOW);
 		
-		iCache=new IconCache(c);
+		iCache=IconCache.getInstance(c);
 		itm=new ArrayList<Obj>();
 		vRect=new Rect();
 		is=70;
@@ -80,7 +79,6 @@ public class DeskView extends View
 		iCache.flush();
 	}
 	public void flushUnVisibles(){
-		if(fc){
 		Rect r=vRect;
 		int i=0;
 		for (Obj it:itm) 
@@ -88,7 +86,6 @@ public class DeskView extends View
 				if(iCache.remove(it.getComponentName()))
 				    i++;
 		Log.d(LOG_TAG,"flushUnVisibles():"+i);
-		}else Log.d(LOG_TAG,"flushUnVisibles() is turned off");
 	}
 	
 	public void initTableSize(){
@@ -114,12 +111,11 @@ public class DeskView extends View
 		is=d.getPrefInt(R.string.pref_is);
 		fh=d.getPrefInt(R.string.pref_fs);
 		cs=d.getPrefBool(R.string.pref_cs);
-		fc=d.getPrefBool(R.string.pref_iccache);
 		ss=d.getPrefInt(R.string.pref_ss);
-		ds=!d.getPrefBool(R.string.pref_icdraw);
+		wm=d.getPrefInt(R.string.pref_wall)>1;
 		Log.d(LOG_TAG,"Params setted: is="+is+" fh="+fh
-			                       +" cs="+cs+" fc="+fc
-								   +" ss="+ss+" ds="+ds);
+			                       +" cs="+cs+" ss="+ss
+								   +" wm="+wm);
 		iCache.setSettings();
 	}
 	
@@ -154,7 +150,10 @@ public class DeskView extends View
 				}else moy=false;
 			}
 		}else{
-			mtx=mty=is/2;
+			if(it.contains((int)x+getScrollX(),(int)y+getScrollY())){
+				mtx=(int)x-it.getXPos()+getScrollX();
+			    mty=(int)y-it.getYPos()+getScrollY();
+			}
 			mox=moy=true;
 		}
 	}
@@ -168,9 +167,11 @@ public class DeskView extends View
 	}
 	
 	public void updateWallpaperOffset(){
-		IBinder t=getWindowToken();
-		wpm.setWallpaperOffsets(t,Math.min(((float)getScrollX()+getWidth()/2)/sw,1.f),Math.min(((float)getScrollY()+getHeight()/2)/sh,1.f));
-//		wpm.setWallpaperOffsetSteps(getScrollX()/sw,getScrollY()/sh);
+		if(wm){
+		    IBinder t=getWindowToken();
+		    wpm.setWallpaperOffsets(t,Math.min(((float)getScrollX()+getWidth()/2)/sw,1.f),Math.min(((float)getScrollY()+getHeight()/2)/sh,1.f));
+//		    wpm.setWallpaperOffsetSteps(getScrollX()/sw,getScrollY()/sh);
+		}
 	}
 	
 	public void addItem(int type,String title,String p1,String p2,int x,int y){
@@ -212,10 +213,13 @@ public class DeskView extends View
 	@Override
 	public void dispatchDraw(Canvas c){
 		super.dispatchDraw(c);
+//		c.save();
+//        c.scale(0.5f,0.5f);
 		Rect r=vRect;
 		getFocusedRect(r);
 		if(isDrawUnlocked)for (Obj it:itm) 
-		    if(ds||it.contains(r))it.draw(c);
+		    if(it.contains(r))it.draw(c);
+//        c.restore();
 	}
 	
 //	@Override

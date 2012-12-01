@@ -14,6 +14,10 @@
 			android:title="@string/mst_fntsize"
 			android:defaultValue="15"/>
 		<CheckBoxPreference
+			android:key="@string/pref_bq"
+			android:title="@string/mst_bmp_quality"
+			android:defaultValue="false"/>
+		<CheckBoxPreference
 			android:key="@string/pref_icres"
 			android:title="@string/mst_res_icons"
 			android:defaultValue="false"/>
@@ -23,29 +27,6 @@
 			android:entries="@array/mst_icden_entr"
 			android:entryValues="@array/mst_icden_vals"
 			android:defaultValue="320"/>
-		<PreferenceScreen
-			android:title="@string/mst_scr_icdraw">
-			<CheckBoxPreference
-				android:key="@string/pref_bq"
-				android:title="@string/mst_bmp_quality"
-				android:summary="@string/mst_bmp_quality_sum"
-				android:defaultValue="false"/>
-			<CheckBoxPreference
-				android:key="@string/pref_iccache"
-				android:title="@string/mst_cache_clear"
-				android:summary="@string/mst_cache_clear_sum"
-				android:defaultValue="false"/>
-			<CheckBoxPreference
-				android:key="@string/pref_icdraw"
-				android:title="@string/mst_icdraw_onscreen"
-				android:summary="@string/mst_icdraw_onscreen_sum"
-				android:defaultValue="false"/>
-			<CheckBoxPreference
-				android:key="@string/pref_icdelload"
-				android:title="@string/mst_icdelay_load"
-				android:summary="@string/mst_icdelay_load_sum"
-				android:defaultValue="true"/>
-		</PreferenceScreen>
 	</PreferenceScreen>
 	<PreferenceScreen
 		android:key="@string/pref_scroll_category"
@@ -71,6 +52,10 @@
 	<CheckBoxPreference
 		android:key="@string/pref_actionbar"
 		android:title="@string/mst_actionbar"
+		android:defaultValue="false"/>
+	<CheckBoxPreference
+		android:key="@string/pref_oldtheme"
+		android:title="@string/mst_oldtheme"
 		android:defaultValue="false"/>
 
 </PreferenceScreen>

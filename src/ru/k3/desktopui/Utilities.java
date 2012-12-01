@@ -268,9 +268,7 @@ public final class Utilities {
 		sh.putBoolean(res.getString(R.string.pref_icres),false);
 		sh.putString(res.getString(R.string.pref_icdensity),"320");
 		sh.putString(res.getString(R.string.pref_wall),"2");
-		sh.putBoolean(res.getString(R.string.pref_iccache),false);
-		sh.putBoolean(res.getString(R.string.pref_icdraw),false);
-		sh.putBoolean(res.getString(R.string.pref_icdelload),true);
+		sh.putBoolean(res.getString(R.string.pref_oldtheme),false);
 		
 		sh.putInt(res.getString(R.string.prefex_defx),0);
 		sh.putInt(res.getString(R.string.prefex_defy),0);
