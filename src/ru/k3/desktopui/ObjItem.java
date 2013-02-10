@@ -27,11 +27,14 @@ public class ObjItem implements Obj{
 	private final Obj.Type type;
 	private final Intent start;
 	private int ar,ab;
+	private boolean enabled;
 	private boolean clicked;
 	private boolean moved;
 	private boolean mov;
+	private int dbId;
 	public ObjItem(Rect zone,IconCache icc,int type,String title,String p1,String p2,int fh){
 		Log.d(LOG_TAG,"Creating object "+title);
+		enabled=true;
 		wv=null;
 		this.zone=zone;
 		w=(short)(zone.right-zone.left);
@@ -55,7 +58,7 @@ public class ObjItem implements Obj{
 				start = new Intent(Intent.ACTION_MAIN);
 //				start.addCategory(Intent.CATEGORY_LAUNCHER);
 				start.setComponent(comp);
-//				start.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+				start.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
 				break;
 			default: this.type = Obj.Type.UNK;
 				this.comp = null;
@@ -73,35 +76,9 @@ public class ObjItem implements Obj{
 		lw=tlw; lb=tlb;
 		correctAbsoluteCoords();
 	}
-	public ObjItem(Rect zone,AppWidgetHostView wv,int id){
-		Log.d(LOG_TAG,"Creating widget object "+id);
-		this.zone=zone;
-		this.minizone=zone;
-		this.wv=wv;
-		this.id=id;
-		this.type=Obj.Type.APPWIDGET;
-		w=(short)(zone.right-zone.left);
-		h=(short)(zone.bottom-zone.top);
-		icp=new Paint();
-		icp.setColor(0x990000AA);
-
-		wv.setVisibility(View.VISIBLE);
-		int childWidthMeasureSpec = MeasureSpec.makeMeasureSpec(w, MeasureSpec.EXACTLY);
-        int childheightMeasureSpec = MeasureSpec.makeMeasureSpec(h, MeasureSpec.EXACTLY);
-        wv.measure(childWidthMeasureSpec, childheightMeasureSpec);
-		wv.layout(zone.left,zone.top,
-		          zone.right,zone.bottom);
-
-		icc=null;
-		comp=null;
-		title=null;
-		txt=null;
-		start=null;
-		fh=lw=lb=sn=0;
-	}
 
 	public void draw(Canvas c){
-		c.drawBitmap(icc.getIcon(comp),zone.left,zone.top,icp);
+		c.drawBitmap(icc.getIcon(comp,this),zone.left,zone.top,icp);
 		for(int i=0;i<title.size();i++)
 		    c.drawText(title.get(i),zone.left+w/2,zone.bottom+fh+fh*i,txt);
 	}
@@ -126,6 +103,10 @@ public class ObjItem implements Obj{
 		return start;
 	}
 
+	public ObjItem setDbId(int dbId){
+		this.dbId=dbId;
+		return this;
+	}
 	public void setPos(int x,int y){
 		if(mov||!minizone.contains(x+w/2,y+w/2)){
 		    zone.set(x,y,x+w,y+h);
@@ -137,33 +118,43 @@ public class ObjItem implements Obj{
 	public void setWidgetTouch(MotionEvent ev){
 		if(wv!=null)wv.onTouchEvent(ev);
 	}
+	public void setEnabled(boolean e){
+		enabled=e;
+	}
 	public void setClicked(boolean cl){
-		clicked=cl;
-//		txt.setUnderlineText(cl);
-		if(icp!=null&&txt!=null){
-		    if(cl){
-		    	icp.setAlpha(128);
-		    	txt.setAlpha(128);
-		    }else{
-		    	icp.setAlpha(255);
-		    	txt.setAlpha(255);
-		    }
-		}
+		if(enabled){
+			clicked=cl;
+//			txt.setUnderlineText(cl);
+			if(icp!=null&&txt!=null){
+		    	if(cl){
+		    		icp.setAlpha(128);
+		    		txt.setAlpha(128);
+		    	}else{
+		    		icp.setAlpha(255);
+		    		txt.setAlpha(255);
+		    	}
+			}
+		}else clicked=false;
 	}
 	public void setMoving(boolean mv){
-		moved=mv;
-		if(icp!=null&&txt!=null){
-		    if(mv){
-		    	icp.setAlpha(128);
-		    	txt.setAlpha(128);
-		    }else{
-		    	icp.setAlpha(255);
-		    	txt.setAlpha(255);
-		    	mov=false;
-		    }
-		}
+		if(enabled){
+			moved=mv;
+			if(icp!=null&&txt!=null){
+		    	if(mv){
+		    		icp.setAlpha(128);
+		    		txt.setAlpha(128);
+		    	}else{
+		    		icp.setAlpha(255);
+		    		txt.setAlpha(255);
+		    		mov=false;
+		    	}
+			}
+		}else moved=mov=false;
 	}
 
+	public int getDbId(){
+		return dbId;
+	}
 	public int getXPos(){
 		return zone.left;
 	}
@@ -187,7 +178,10 @@ public class ObjItem implements Obj{
 	}
 
 	public boolean isWidget(){
-		return type==Obj.Type.APPWIDGET;
+		return false;
+	}
+	public boolean isEnabled(){
+		return enabled;
 	}
 	public boolean isClicked(){
 		return clicked;

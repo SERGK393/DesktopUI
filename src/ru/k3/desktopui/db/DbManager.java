@@ -17,7 +17,7 @@ import java.util.ArrayList;
 
 public class DbManager extends SQLiteOpenHelper implements BaseColumns{
 	
-	public static final int DB_VERSION=3;
+	public static final int DB_VERSION=4;
 	
 	public static final String OBJ="obj";
 	public static final String TYPE="type";
@@ -27,6 +27,8 @@ public class DbManager extends SQLiteOpenHelper implements BaseColumns{
 	public static final String PARAM_3="param_3";
 	public static final String POSX="posx";
 	public static final String POSY="posy";
+	public static final String WIDTH="width";
+	public static final String HEIGHT="height";
 		
 	Context c;
 	PackageManager manager;
@@ -46,9 +48,9 @@ public class DbManager extends SQLiteOpenHelper implements BaseColumns{
 	public void onUpgrade(SQLiteDatabase db,int olddb, int newdb){
 		switch(olddb){
 			case 1: db.execSQL("DROP TABLE IF EXISTS "+OBJ);
-				    db.execSQL("DROP TABLE IF EXISTS mysettings");
 		            onCreate(db);
 		    case 2: db.execSQL("DROP TABLE IF EXISTS mysettings");
+			case 3: db.execSQL("ALTER TABLE "+);
 		}
 //		db.execSQL("DROP TABLE IF EXISTS "+OBJ);
 //		db.execSQL("DROP TABLE IF EXISTS "+MSETT);

@@ -6,21 +6,23 @@ import android.view.*;
 import java.util.*;
 
 import android.content.res.TypedArray;
+import android.database.Cursor;
 import android.util.AttributeSet;
 import android.widget.Scroller;
 import android.util.Log;
 import android.app.WallpaperManager;
 import android.os.IBinder;
-import android.appwidget.AppWidgetHostView;
 import android.appwidget.AppWidgetProviderInfo;
 
-public class DeskView extends View
+public class DeskView extends ViewGroup
 {
     private static final String LOG_TAG="DesktopUI.DeskView";
+    
+    private static DeskView sdv=null;
 	
-    private ArrayList<Obj> itm;
+    private static ArrayList<Obj> itm=null;
+	
 	private Events clk=null;
-	private WidgetSpace ws=null;
 	
 	private final Context c;
 	private final IconCache iCache;
@@ -39,9 +41,11 @@ public class DeskView extends View
 	private int is,fh;//icon size, font height
 	private int mtx,mty;//move touching
 	private boolean mox,moy;//move out
+	private boolean uu;//unusable
 	
 	public DeskView(Context co, AttributeSet attrs){
 		super(co,attrs);
+		sdv=this;
 		Log.d(LOG_TAG,"Creating View");
 		c=co;
 		setFocusable(true);
@@ -50,7 +54,7 @@ public class DeskView extends View
 //		setDrawingCacheQuality(DRAWING_CACHE_QUALITY_LOW);
 		
 		iCache=IconCache.getInstance(c);
-		itm=new ArrayList<Obj>();
+		if(itm==null)itm=new ArrayList<Obj>();
 		vRect=new Rect();
 		is=70;
 		fh=12;
@@ -63,9 +67,16 @@ public class DeskView extends View
         setHorizontalScrollBarEnabled(true);
         setVerticalScrollBarEnabled(true);
 
-        TypedArray a = c.obtainStyledAttributes(R.styleable.View);
+        TypedArray a = c.obtainStyledAttributes(R.styleable.ViewGroup);
         initializeScrollbars(a);
         a.recycle();
+	}
+	public static DeskView getInstance(){
+		return sdv;
+	}
+	
+	public static ArrayList<Obj> getObjS(){
+		return itm;
 	}
 	
 	public void clear(){
@@ -113,9 +124,10 @@ public class DeskView extends View
 		cs=d.getPrefBool(R.string.pref_cs);
 		ss=d.getPrefInt(R.string.pref_ss);
 		wm=d.getPrefInt(R.string.pref_wall)>1;
+		uu=d.getPrefBool(R.string.pref_icunuse);
 		Log.d(LOG_TAG,"Params setted: is="+is+" fh="+fh
 			                       +" cs="+cs+" ss="+ss
-								   +" wm="+wm);
+								   +" wm="+wm+" uu="+uu);
 		iCache.setSettings();
 	}
 	
@@ -125,9 +137,6 @@ public class DeskView extends View
 	
 	public void setEvents(Events evt){
 		clk=evt;
-	}
-	public void setWidgetSpace(WidgetSpace ws){
-		this.ws=ws;
 	}
 	
 	public void setMoveTouching(Obj it,float x,float y){
@@ -169,45 +178,71 @@ public class DeskView extends View
 	public void updateWallpaperOffset(){
 		if(wm){
 		    IBinder t=getWindowToken();
+//		    wpm.setWallpaperOffsetSteps(40,40);
 		    wpm.setWallpaperOffsets(t,Math.min(((float)getScrollX()+getWidth()/2)/sw,1.f),Math.min(((float)getScrollY()+getHeight()/2)/sh,1.f));
-//		    wpm.setWallpaperOffsetSteps(getScrollX()/sw,getScrollY()/sh);
 		}
 	}
 	
-	public void addItem(int type,String title,String p1,String p2,int x,int y){
-		itm.add(new ObjItem(new Rect(x,y,x+is,y+is),iCache,type,title,p1,p2,fh));
+	public void addItem(int dbId,int type,String title,String p1,String p2,int x,int y){
+		itm.add(new ObjItem(new Rect(x,y,x+is,y+is),iCache,type,title,p1,p2,fh).setDbId(dbId));
 		if(sw<x+is)sw=x+is; if(sh<y+is+fh+5)sh=y+is+fh+5;
 //	    postInvalidate();
 	}
 	public void editItem(int pos,int type,String title,String p1,String p2){
+		int dbId=itm.get(pos).getDbId();
 		int x=itm.get(pos).getXPos();
 		int y=itm.get(pos).getYPos();
-		itm.set(pos,new ObjItem(new Rect(x,y,x+is,y+is),iCache,type,title,p1,p2,fh).flush());
+		itm.set(pos,new ObjItem(new Rect(x,y,x+is,y+is),iCache,type,title,p1,p2,fh).setDbId(dbId).flush());
 	    postInvalidate();
 	}
 	public void deleteItem(Obj it){
 		itm.remove(it);
 	}
-	public void addWidget(AppWidgetHostView v,int x,int y){
-		ws.addWidget(v,x,y);
-
-		int swSpec = MeasureSpec.makeMeasureSpec(sw, MeasureSpec.EXACTLY);
-		int shSpec = MeasureSpec.makeMeasureSpec(sh, MeasureSpec.EXACTLY);
-		ws.onMeasure(swSpec,shSpec);
+	public void deleteItem(int pos){
+		itm.remove(pos);
 	}
-	public void addWidget(int id,AppWidgetProviderInfo inf,int x,int y){
-		ws.addWidget(id,inf,x,y);
+	public ObjWidget addWidget(int dbId,int id,AppWidgetProviderInfo inf,int x,int y){
+		LayoutParams lp=new LayoutParams(x,y,inf.minWidth,inf.minHeight);
+		
+		ObjWidget v= (ObjWidget)((DesktopUI)c).getAppWidgetHost().createView(c,id,inf);
+		v.setDbId(dbId);
+//		AppWidgetHostView v= ((DesktopUI)c).getAppWidgetHost().createView(c,id,inf);
+		v.setAppWidget(id,inf);
+
+		v.setLayoutParams(lp);
+		addView(v,lp);
 
 		int swSpec = MeasureSpec.makeMeasureSpec(sw, MeasureSpec.EXACTLY);
 		int shSpec = MeasureSpec.makeMeasureSpec(sh, MeasureSpec.EXACTLY);
-		ws.onMeasure(swSpec,shSpec);
+		onMeasure(swSpec,shSpec);
+
+		postInvalidate();
+		
+		return v;
+	}
+	public ObjWidget addWidget(int dbId,ObjWidget v,int x,int y){
+		v.setDbId(dbId);
+		LayoutParams lp=new LayoutParams(x,y,
+		                    v.getAppWidgetInfo().minWidth,
+							v.getAppWidgetInfo().minHeight);
+		
+		v.setLayoutParams(lp);
+		addView(v,lp);
+
+		int swSpec = MeasureSpec.makeMeasureSpec(sw, MeasureSpec.EXACTLY);
+		int shSpec = MeasureSpec.makeMeasureSpec(sh, MeasureSpec.EXACTLY);
+		onMeasure(swSpec,shSpec);
+
+		postInvalidate();
+		
+		return v;
 	}
 	
 	private boolean check(MotionEvent ev,int i){
 		return check(ev,itm.get(i));
 	}
 	private boolean check(MotionEvent ev,Obj it){
-		return it.contains(getScrollX()+(int)ev.getX()-mtx,getScrollY()+(int)ev.getY()-mty);
+		return it.isEnabled()&&it.contains(getScrollX()+(int)ev.getX()-mtx,getScrollY()+(int)ev.getY()-mty);
 	}
 	
 	@Override
@@ -218,50 +253,55 @@ public class DeskView extends View
 		Rect r=vRect;
 		getFocusedRect(r);
 		if(isDrawUnlocked)for (Obj it:itm) 
-		    if(it.contains(r))it.draw(c);
+		    if((!it.isWidget()&&(uu||it.isEnabled()))&&it.contains(r))it.draw(c);
 //        c.restore();
 	}
 	
-//	@Override
-//    protected void onMeasure(int wMeasureSpec, int hMeasureSpec) {
-//		int widthMeasureSpec = MeasureSpec.makeMeasureSpec(sw, MeasureSpec.EXACTLY);
-//        int heightMeasureSpec = MeasureSpec.makeMeasureSpec(sh, MeasureSpec.EXACTLY);
-//        // TODO: currently ignoring padding
-////        int widthSpecMode = MeasureSpec.getMode(widthMeasureSpec);
-//        int widthSpecSize =  MeasureSpec.getSize(widthMeasureSpec);
+	@Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        // currently ignoring padding
+        int widthSpecSize =  MeasureSpec.getSize(widthMeasureSpec);
+        int heightSpecSize =  MeasureSpec.getSize(heightMeasureSpec);
+
+        int count = getChildCount();
+
+        for (int i = 0; i < count; i++) {
+            View child = getChildAt(i);
+            LayoutParams lp = (LayoutParams) child.getLayoutParams();
+
+            int childWidthMeasureSpec = MeasureSpec.makeMeasureSpec(lp.width, MeasureSpec.EXACTLY);
+            int childheightMeasureSpec =
+				MeasureSpec.makeMeasureSpec(lp.height, MeasureSpec.EXACTLY);
+            child.measure(childWidthMeasureSpec, childheightMeasureSpec);
+        }
+
+        setMeasuredDimension(widthSpecSize, heightSpecSize);
+    }
+
+    @Override
+    protected void onLayout(boolean changed, int l, int t, int r, int b) {
+        int count = getChildCount();
+
+        for (int i = 0; i < count; i++) {
+            View child = getChildAt(i);
+            if (child.getVisibility() != GONE) {
+
+                LayoutParams lp = (LayoutParams) child.getLayoutParams();
+
+                child.layout(lp.left, lp.top, lp.right, lp.bottom);
+
+//                if (lp.dropped) {
+//                    lp.dropped = false;
 //
-////        int heightSpecMode = MeasureSpec.getMode(heightMeasureSpec);
-//        int heightSpecSize =  MeasureSpec.getSize(heightMeasureSpec);
-//
-//        setMeasuredDimension(widthSpecSize, heightSpecSize);
-//    }
-//
-//    @Override
-//    protected void onLayout(boolean changed, int l, int t, int r, int b) {
-////        int count = getChildCount();
-////
-////        for (int i = 0; i < count; i++) {
-////            View child = getChildAt(i);
-////            if (child.getVisibility() != GONE) {
-////
-//////                CellLayout.LayoutParams lp = (CellLayout.LayoutParams) child.getLayoutParams();
-////
-////                int childLeft = 500;//lp.x;
-////                int childTop = 800;//lp.y;
-////                child.layout(childLeft, childTop, childLeft + getWidth()/*lp.width*/, childTop + getHeight()/*lp.height*/);
-////
-//////                if (lp.dropped) {
-//////                    lp.dropped = false;
-//////
-//////                    final int[] cellXY = mCellXY;
-//////                    getLocationOnScreen(cellXY);
-//////                    mWallpaperManager.sendWallpaperCommand(getWindowToken(), "android.home.drop",
-//////														   cellXY[0] + childLeft + lp.width / 2,
-//////														   cellXY[1] + childTop + lp.height / 2, 0, null);
-//////                }
-////            }
-////        }
-//    }
+//                    final int[] cellXY = mCellXY;
+//                    getLocationOnScreen(cellXY);
+//                    mWallpaperManager.sendWallpaperCommand(getWindowToken(), "android.home.drop",
+//														   cellXY[0] + childLeft + lp.width / 2,
+//														   cellXY[1] + childTop + lp.height / 2, 0, null);
+//                }
+            }
+        }
+    }
 	
 	@Override
     protected int computeHorizontalScrollRange()
@@ -313,8 +353,7 @@ public class DeskView extends View
 					if(sw<sw1)sw=sw1;
 					sh=it.getAbsoluteY2();
 					if(sh<sh1)sh=sh1;
-					scrollBy((newx-getScrollX())/6,(newy-getScrollY())/6);
-					ws.scrollTo(getScrollX(),getScrollY());
+					scrollBy(Math.min((newx-getScrollX())/6,3),Math.min((newy-getScrollY())/6,3));
 					updateWallpaperOffset();
 				}
 				clk.onMoveItem(it,(int)ev.getX()+getScrollX()-mtx,(int)ev.getY()+getScrollY()-mty);
@@ -336,7 +375,7 @@ public class DeskView extends View
 				if(check(ev,it)) break; i++;
 			}
 			if (i<itm.size()) {
-				clk.onClick(i,itm.get(i));
+				clk.onClick(itm.get(i));
 				invalidate();
 			}/*else{
 			 int willSX=getScrollX()%is;
@@ -380,7 +419,6 @@ public class DeskView extends View
             int x = scroller.getCurrX();
             int y = scroller.getCurrY();
             scrollTo(x, y);
-			ws.scrollTo(x,y);
             if (oldX != getScrollX() || oldY != getScrollY())
             {
                 onScrollChanged(getScrollX(), getScrollY(), oldX, oldY);
@@ -425,7 +463,6 @@ public class DeskView extends View
 			int distY=sh>getHeight()?(((getScrollY() < -10) || (getScrollY() > sh-getHeight()+10))?(int)distanceY/2:(int)distanceY):0;
 			
 			scrollBy(distX, distY);
-			ws.scrollTo(getScrollX(),getScrollY());
 			updateWallpaperOffset();
 			return true;
         }
@@ -438,14 +475,76 @@ public class DeskView extends View
 			}
 			if (i<itm.size()){
 				sw1=sw; sh1=sh;
-				clk.onLongClick(i,itm.get(i),(int)ev.getX()+getScrollX(),(int)ev.getY()+getScrollY());
+				Obj it=itm.get(i);
+				if(it.isEnabled())
+				clk.onLongClick(i,it,(int)ev.getX()+getScrollX(),(int)ev.getY()+getScrollY());
+				else
+				clk.onLongClick(0,null,(int)ev.getX()+getScrollX()-is/2,(int)ev.getY()+getScrollY()-is/2);
 			}else
 			clk.onLongClick(0,null,(int)ev.getX()+getScrollX()-is/2,(int)ev.getY()+getScrollY()-is/2);
 		}
     }
 	
+
+    @Override
+    public ViewGroup.LayoutParams generateLayoutParams(AttributeSet attrs) {
+        return new DeskView.LayoutParams(getContext(), attrs);
+    }
+
+    @Override
+    protected boolean checkLayoutParams(ViewGroup.LayoutParams p) {
+        return p instanceof DeskView.LayoutParams;
+    }
+	
+    @Override
+    protected ViewGroup.LayoutParams generateLayoutParams(ViewGroup.LayoutParams p) {
+        return new DeskView.LayoutParams(p);
+    }
+
+    public static class LayoutParams extends ViewGroup.MarginLayoutParams {
+		
+		public int left;
+		public int top;
+		public int right;
+		public int bottom;
+
+        public LayoutParams(Context c, AttributeSet attrs) {
+            super(c, attrs);
+        }
+
+        public LayoutParams(ViewGroup.LayoutParams source) {
+            super(source);
+        }
+
+        @SuppressWarnings("deprecation")
+		public LayoutParams(int left, int top, int width, int height) {
+            super(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
+            setup(left,top,width,height);
+        }
+
+        public LayoutParams setup(int left, int top, int width, int height) {
+            this.left = left;
+            this.top = top;
+            this.width = width;
+            this.height = height;
+			this.right = left+width;
+			this.bottom = top+height;
+			return this;
+        }
+        public LayoutParams setup(Rect r) {
+            this.left = r.left;
+            this.top = r.top;
+			this.right = r.right;
+			this.bottom = r.bottom;
+            this.width = r.right-r.left;
+            this.height = r.bottom-r.top;
+			return this;
+        }
+    }
+	
+	
 	public interface Events{
-		public abstract void onClick(int pos,Obj it);
+		public abstract void onClick(Obj it);
 		public abstract void onLongClick(int pos,Obj it,int x,int y);
 		public abstract void onMoveItem(Obj it,int mx,int my);
 		public abstract int getItemPos();

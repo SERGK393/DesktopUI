@@ -30,8 +30,8 @@ public final class R {
         public static final int icon=0x7f020000;
     }
     public static final class id {
-        public static final int add=0x7f090011;
-        public static final int apps=0x7f090013;
+        public static final int add=0x7f090010;
+        public static final int apps=0x7f090012;
         public static final int desk=0x7f09000f;
         public static final int edit_n=0x7f090001;
         public static final int edit_n_srch=0x7f090002;
@@ -46,12 +46,11 @@ public final class R {
         public static final int error_text=0x7f090009;
         public static final int error_view=0x7f090008;
         public static final int list_item=0x7f09000c;
-        public static final int restart=0x7f090015;
+        public static final int restart=0x7f090014;
         public static final int rootview=0x7f09000d;
-        public static final int sett=0x7f090014;
-        public static final int srch=0x7f090012;
+        public static final int sett=0x7f090013;
+        public static final int srch=0x7f090011;
         public static final int wall=0x7f09000e;
-        public static final int widg=0x7f090010;
     }
     public static final class layout {
         public static final int edit=0x7f030000;
@@ -64,59 +63,62 @@ public final class R {
         public static final int add=0x7f070004;
         public static final int app_name=0x7f070000;
         public static final int apps=0x7f070007;
-        public static final int cancel=0x7f070011;
-        public static final int clear_pref=0x7f070036;
-        public static final int cntinue=0x7f070012;
-        public static final int edit=0x7f070031;
-        public static final int edit_n=0x7f070032;
-        public static final int edit_p1=0x7f070033;
-        public static final int edit_p2=0x7f070034;
-        public static final int edit_p3=0x7f070035;
-        public static final int error_info=0x7f070037;
+        public static final int cancel=0x7f070012;
+        public static final int clear_pref=0x7f070039;
+        public static final int cntinue=0x7f070013;
+        public static final int edit=0x7f070034;
+        public static final int edit_n=0x7f070035;
+        public static final int edit_p1=0x7f070036;
+        public static final int edit_p2=0x7f070037;
+        public static final int edit_p3=0x7f070038;
+        public static final int error_info=0x7f07003a;
         public static final int error_mon=0x7f070003;
-        public static final int exit=0x7f07000c;
-        public static final int exit_al=0x7f07000d;
-        public static final int mst_actionbar=0x7f07001e;
-        public static final int mst_bmp_quality=0x7f070016;
-        public static final int mst_cicle_scroll=0x7f07001b;
-        public static final int mst_fntsize=0x7f070015;
-        public static final int mst_itmsize=0x7f070014;
-        public static final int mst_oldtheme=0x7f07001f;
-        public static final int mst_res_icons=0x7f070017;
-        public static final int mst_res_icons_density=0x7f070018;
-        public static final int mst_reset=0x7f070019;
-        public static final int mst_scr_icons=0x7f070013;
-        public static final int mst_scr_icons_sum=0x7f070020;
-        public static final int mst_scr_scroll=0x7f07001a;
-        public static final int mst_scr_scroll_sum=0x7f070021;
-        public static final int mst_scroll_speed=0x7f07001c;
-        public static final int mst_wall_mode=0x7f07001d;
-        public static final int mysett=0x7f07000a;
-        public static final int no=0x7f07000e;
-        public static final int pref_actionbar=0x7f07002d;
-        public static final int pref_bq=0x7f070027;
-        public static final int pref_cs=0x7f070029;
-        public static final int pref_fs=0x7f070024;
-        public static final int pref_icdensity=0x7f070026;
-        public static final int pref_icons_category=0x7f070022;
-        public static final int pref_icres=0x7f070025;
-        public static final int pref_is=0x7f070023;
-        public static final int pref_oldtheme=0x7f07002e;
-        public static final int pref_scroll_category=0x7f070028;
-        public static final int pref_ss=0x7f07002a;
-        public static final int pref_wall=0x7f07002c;
-        public static final int pref_wall_category=0x7f07002b;
-        public static final int prefex_defx=0x7f07002f;
-        public static final int prefex_defy=0x7f070030;
+        public static final int exit=0x7f07000d;
+        public static final int exit_al=0x7f07000e;
+        public static final int mst_actionbar=0x7f070020;
+        public static final int mst_bmp_quality=0x7f070017;
+        public static final int mst_cicle_scroll=0x7f07001d;
+        public static final int mst_fntsize=0x7f070016;
+        public static final int mst_itmsize=0x7f070015;
+        public static final int mst_oldtheme=0x7f070021;
+        public static final int mst_res_icons=0x7f070018;
+        public static final int mst_res_icons_density=0x7f07001a;
+        public static final int mst_reset=0x7f07001b;
+        public static final int mst_scr_icons=0x7f070014;
+        public static final int mst_scr_icons_sum=0x7f070022;
+        public static final int mst_scr_scroll=0x7f07001c;
+        public static final int mst_scr_scroll_sum=0x7f070023;
+        public static final int mst_scroll_speed=0x7f07001e;
+        public static final int mst_unusable_icons=0x7f070019;
+        public static final int mst_wall_mode=0x7f07001f;
+        public static final int mysett=0x7f07000b;
+        public static final int no=0x7f07000f;
+        public static final int pref_actionbar=0x7f070030;
+        public static final int pref_bq=0x7f07002a;
+        public static final int pref_cs=0x7f07002c;
+        public static final int pref_fs=0x7f070026;
+        public static final int pref_icdensity=0x7f070029;
+        public static final int pref_icons_category=0x7f070024;
+        public static final int pref_icres=0x7f070027;
+        public static final int pref_icunuse=0x7f070028;
+        public static final int pref_is=0x7f070025;
+        public static final int pref_oldtheme=0x7f070031;
+        public static final int pref_scroll_category=0x7f07002b;
+        public static final int pref_ss=0x7f07002d;
+        public static final int pref_wall=0x7f07002f;
+        public static final int pref_wall_category=0x7f07002e;
+        public static final int prefex_defx=0x7f070032;
+        public static final int prefex_defy=0x7f070033;
         public static final int restart=0x7f070009;
-        public static final int save=0x7f070010;
+        public static final int save=0x7f070011;
         public static final int sett=0x7f070008;
-        public static final int sett_all=0x7f07000b;
+        public static final int sett_all=0x7f07000c;
         public static final int sett_base=0x7f070001;
         public static final int sett_my=0x7f070002;
         public static final int srch=0x7f070006;
+        public static final int test=0x7f07000a;
         public static final int wall=0x7f070005;
-        public static final int yes=0x7f07000f;
+        public static final int yes=0x7f070010;
     }
     public static final class style {
         public static final int Theme=0x7f080000;
@@ -132,105 +134,105 @@ public final class R {
         public static final int mysettings=0x7f040000;
     }
     public static final class styleable {
-        /** Attributes that can be used with a View.
+        /** Attributes that can be used with a ViewGroup.
            <p>Includes the following attributes:</p>
            <table>
            <colgroup align="left" />
            <colgroup align="left" />
            <tr><th>Attribute</th><th>Description</th></tr>
-           <tr><td><code>{@link #View_android_background ru.k3.desktopui:android_background}</code></td><td></td></tr>
-           <tr><td><code>{@link #View_android_clickable ru.k3.desktopui:android_clickable}</code></td><td></td></tr>
-           <tr><td><code>{@link #View_android_contentDescription ru.k3.desktopui:android_contentDescription}</code></td><td></td></tr>
-           <tr><td><code>{@link #View_android_drawingCacheQuality ru.k3.desktopui:android_drawingCacheQuality}</code></td><td></td></tr>
-           <tr><td><code>{@link #View_android_duplicateParentState ru.k3.desktopui:android_duplicateParentState}</code></td><td></td></tr>
-           <tr><td><code>{@link #View_android_fadeScrollbars ru.k3.desktopui:android_fadeScrollbars}</code></td><td></td></tr>
-           <tr><td><code>{@link #View_android_fadingEdge ru.k3.desktopui:android_fadingEdge}</code></td><td></td></tr>
-           <tr><td><code>{@link #View_android_fadingEdgeLength ru.k3.desktopui:android_fadingEdgeLength}</code></td><td></td></tr>
-           <tr><td><code>{@link #View_android_fitsSystemWindows ru.k3.desktopui:android_fitsSystemWindows}</code></td><td></td></tr>
-           <tr><td><code>{@link #View_android_focusable ru.k3.desktopui:android_focusable}</code></td><td></td></tr>
-           <tr><td><code>{@link #View_android_focusableInTouchMode ru.k3.desktopui:android_focusableInTouchMode}</code></td><td></td></tr>
-           <tr><td><code>{@link #View_android_hapticFeedbackEnabled ru.k3.desktopui:android_hapticFeedbackEnabled}</code></td><td></td></tr>
-           <tr><td><code>{@link #View_android_id ru.k3.desktopui:android_id}</code></td><td></td></tr>
-           <tr><td><code>{@link #View_android_isScrollContainer ru.k3.desktopui:android_isScrollContainer}</code></td><td></td></tr>
-           <tr><td><code>{@link #View_android_keepScreenOn ru.k3.desktopui:android_keepScreenOn}</code></td><td></td></tr>
-           <tr><td><code>{@link #View_android_longClickable ru.k3.desktopui:android_longClickable}</code></td><td></td></tr>
-           <tr><td><code>{@link #View_android_minHeight ru.k3.desktopui:android_minHeight}</code></td><td></td></tr>
-           <tr><td><code>{@link #View_android_minWidth ru.k3.desktopui:android_minWidth}</code></td><td></td></tr>
-           <tr><td><code>{@link #View_android_nextFocusDown ru.k3.desktopui:android_nextFocusDown}</code></td><td></td></tr>
-           <tr><td><code>{@link #View_android_nextFocusLeft ru.k3.desktopui:android_nextFocusLeft}</code></td><td></td></tr>
-           <tr><td><code>{@link #View_android_nextFocusRight ru.k3.desktopui:android_nextFocusRight}</code></td><td></td></tr>
-           <tr><td><code>{@link #View_android_nextFocusUp ru.k3.desktopui:android_nextFocusUp}</code></td><td></td></tr>
-           <tr><td><code>{@link #View_android_onClick ru.k3.desktopui:android_onClick}</code></td><td></td></tr>
-           <tr><td><code>{@link #View_android_padding ru.k3.desktopui:android_padding}</code></td><td></td></tr>
-           <tr><td><code>{@link #View_android_paddingBottom ru.k3.desktopui:android_paddingBottom}</code></td><td></td></tr>
-           <tr><td><code>{@link #View_android_paddingLeft ru.k3.desktopui:android_paddingLeft}</code></td><td></td></tr>
-           <tr><td><code>{@link #View_android_paddingRight ru.k3.desktopui:android_paddingRight}</code></td><td></td></tr>
-           <tr><td><code>{@link #View_android_paddingTop ru.k3.desktopui:android_paddingTop}</code></td><td></td></tr>
-           <tr><td><code>{@link #View_android_saveEnabled ru.k3.desktopui:android_saveEnabled}</code></td><td></td></tr>
-           <tr><td><code>{@link #View_android_scrollX ru.k3.desktopui:android_scrollX}</code></td><td></td></tr>
-           <tr><td><code>{@link #View_android_scrollY ru.k3.desktopui:android_scrollY}</code></td><td></td></tr>
-           <tr><td><code>{@link #View_android_scrollbarAlwaysDrawHorizontalTrack ru.k3.desktopui:android_scrollbarAlwaysDrawHorizontalTrack}</code></td><td></td></tr>
-           <tr><td><code>{@link #View_android_scrollbarAlwaysDrawVerticalTrack ru.k3.desktopui:android_scrollbarAlwaysDrawVerticalTrack}</code></td><td></td></tr>
-           <tr><td><code>{@link #View_android_scrollbarDefaultDelayBeforeFade ru.k3.desktopui:android_scrollbarDefaultDelayBeforeFade}</code></td><td></td></tr>
-           <tr><td><code>{@link #View_android_scrollbarFadeDuration ru.k3.desktopui:android_scrollbarFadeDuration}</code></td><td></td></tr>
-           <tr><td><code>{@link #View_android_scrollbarSize ru.k3.desktopui:android_scrollbarSize}</code></td><td></td></tr>
-           <tr><td><code>{@link #View_android_scrollbarStyle ru.k3.desktopui:android_scrollbarStyle}</code></td><td></td></tr>
-           <tr><td><code>{@link #View_android_scrollbarThumbHorizontal ru.k3.desktopui:android_scrollbarThumbHorizontal}</code></td><td></td></tr>
-           <tr><td><code>{@link #View_android_scrollbarThumbVertical ru.k3.desktopui:android_scrollbarThumbVertical}</code></td><td></td></tr>
-           <tr><td><code>{@link #View_android_scrollbarTrackHorizontal ru.k3.desktopui:android_scrollbarTrackHorizontal}</code></td><td></td></tr>
-           <tr><td><code>{@link #View_android_scrollbarTrackVertical ru.k3.desktopui:android_scrollbarTrackVertical}</code></td><td></td></tr>
-           <tr><td><code>{@link #View_android_scrollbars ru.k3.desktopui:android_scrollbars}</code></td><td></td></tr>
-           <tr><td><code>{@link #View_android_soundEffectsEnabled ru.k3.desktopui:android_soundEffectsEnabled}</code></td><td></td></tr>
-           <tr><td><code>{@link #View_android_tag ru.k3.desktopui:android_tag}</code></td><td></td></tr>
-           <tr><td><code>{@link #View_android_visibility ru.k3.desktopui:android_visibility}</code></td><td></td></tr>
+           <tr><td><code>{@link #ViewGroup_android_background ru.k3.desktopui:android_background}</code></td><td></td></tr>
+           <tr><td><code>{@link #ViewGroup_android_clickable ru.k3.desktopui:android_clickable}</code></td><td></td></tr>
+           <tr><td><code>{@link #ViewGroup_android_contentDescription ru.k3.desktopui:android_contentDescription}</code></td><td></td></tr>
+           <tr><td><code>{@link #ViewGroup_android_drawingCacheQuality ru.k3.desktopui:android_drawingCacheQuality}</code></td><td></td></tr>
+           <tr><td><code>{@link #ViewGroup_android_duplicateParentState ru.k3.desktopui:android_duplicateParentState}</code></td><td></td></tr>
+           <tr><td><code>{@link #ViewGroup_android_fadeScrollbars ru.k3.desktopui:android_fadeScrollbars}</code></td><td></td></tr>
+           <tr><td><code>{@link #ViewGroup_android_fadingEdge ru.k3.desktopui:android_fadingEdge}</code></td><td></td></tr>
+           <tr><td><code>{@link #ViewGroup_android_fadingEdgeLength ru.k3.desktopui:android_fadingEdgeLength}</code></td><td></td></tr>
+           <tr><td><code>{@link #ViewGroup_android_fitsSystemWindows ru.k3.desktopui:android_fitsSystemWindows}</code></td><td></td></tr>
+           <tr><td><code>{@link #ViewGroup_android_focusable ru.k3.desktopui:android_focusable}</code></td><td></td></tr>
+           <tr><td><code>{@link #ViewGroup_android_focusableInTouchMode ru.k3.desktopui:android_focusableInTouchMode}</code></td><td></td></tr>
+           <tr><td><code>{@link #ViewGroup_android_hapticFeedbackEnabled ru.k3.desktopui:android_hapticFeedbackEnabled}</code></td><td></td></tr>
+           <tr><td><code>{@link #ViewGroup_android_id ru.k3.desktopui:android_id}</code></td><td></td></tr>
+           <tr><td><code>{@link #ViewGroup_android_isScrollContainer ru.k3.desktopui:android_isScrollContainer}</code></td><td></td></tr>
+           <tr><td><code>{@link #ViewGroup_android_keepScreenOn ru.k3.desktopui:android_keepScreenOn}</code></td><td></td></tr>
+           <tr><td><code>{@link #ViewGroup_android_longClickable ru.k3.desktopui:android_longClickable}</code></td><td></td></tr>
+           <tr><td><code>{@link #ViewGroup_android_minHeight ru.k3.desktopui:android_minHeight}</code></td><td></td></tr>
+           <tr><td><code>{@link #ViewGroup_android_minWidth ru.k3.desktopui:android_minWidth}</code></td><td></td></tr>
+           <tr><td><code>{@link #ViewGroup_android_nextFocusDown ru.k3.desktopui:android_nextFocusDown}</code></td><td></td></tr>
+           <tr><td><code>{@link #ViewGroup_android_nextFocusLeft ru.k3.desktopui:android_nextFocusLeft}</code></td><td></td></tr>
+           <tr><td><code>{@link #ViewGroup_android_nextFocusRight ru.k3.desktopui:android_nextFocusRight}</code></td><td></td></tr>
+           <tr><td><code>{@link #ViewGroup_android_nextFocusUp ru.k3.desktopui:android_nextFocusUp}</code></td><td></td></tr>
+           <tr><td><code>{@link #ViewGroup_android_onClick ru.k3.desktopui:android_onClick}</code></td><td></td></tr>
+           <tr><td><code>{@link #ViewGroup_android_padding ru.k3.desktopui:android_padding}</code></td><td></td></tr>
+           <tr><td><code>{@link #ViewGroup_android_paddingBottom ru.k3.desktopui:android_paddingBottom}</code></td><td></td></tr>
+           <tr><td><code>{@link #ViewGroup_android_paddingLeft ru.k3.desktopui:android_paddingLeft}</code></td><td></td></tr>
+           <tr><td><code>{@link #ViewGroup_android_paddingRight ru.k3.desktopui:android_paddingRight}</code></td><td></td></tr>
+           <tr><td><code>{@link #ViewGroup_android_paddingTop ru.k3.desktopui:android_paddingTop}</code></td><td></td></tr>
+           <tr><td><code>{@link #ViewGroup_android_saveEnabled ru.k3.desktopui:android_saveEnabled}</code></td><td></td></tr>
+           <tr><td><code>{@link #ViewGroup_android_scrollX ru.k3.desktopui:android_scrollX}</code></td><td></td></tr>
+           <tr><td><code>{@link #ViewGroup_android_scrollY ru.k3.desktopui:android_scrollY}</code></td><td></td></tr>
+           <tr><td><code>{@link #ViewGroup_android_scrollbarAlwaysDrawHorizontalTrack ru.k3.desktopui:android_scrollbarAlwaysDrawHorizontalTrack}</code></td><td></td></tr>
+           <tr><td><code>{@link #ViewGroup_android_scrollbarAlwaysDrawVerticalTrack ru.k3.desktopui:android_scrollbarAlwaysDrawVerticalTrack}</code></td><td></td></tr>
+           <tr><td><code>{@link #ViewGroup_android_scrollbarDefaultDelayBeforeFade ru.k3.desktopui:android_scrollbarDefaultDelayBeforeFade}</code></td><td></td></tr>
+           <tr><td><code>{@link #ViewGroup_android_scrollbarFadeDuration ru.k3.desktopui:android_scrollbarFadeDuration}</code></td><td></td></tr>
+           <tr><td><code>{@link #ViewGroup_android_scrollbarSize ru.k3.desktopui:android_scrollbarSize}</code></td><td></td></tr>
+           <tr><td><code>{@link #ViewGroup_android_scrollbarStyle ru.k3.desktopui:android_scrollbarStyle}</code></td><td></td></tr>
+           <tr><td><code>{@link #ViewGroup_android_scrollbarThumbHorizontal ru.k3.desktopui:android_scrollbarThumbHorizontal}</code></td><td></td></tr>
+           <tr><td><code>{@link #ViewGroup_android_scrollbarThumbVertical ru.k3.desktopui:android_scrollbarThumbVertical}</code></td><td></td></tr>
+           <tr><td><code>{@link #ViewGroup_android_scrollbarTrackHorizontal ru.k3.desktopui:android_scrollbarTrackHorizontal}</code></td><td></td></tr>
+           <tr><td><code>{@link #ViewGroup_android_scrollbarTrackVertical ru.k3.desktopui:android_scrollbarTrackVertical}</code></td><td></td></tr>
+           <tr><td><code>{@link #ViewGroup_android_scrollbars ru.k3.desktopui:android_scrollbars}</code></td><td></td></tr>
+           <tr><td><code>{@link #ViewGroup_android_soundEffectsEnabled ru.k3.desktopui:android_soundEffectsEnabled}</code></td><td></td></tr>
+           <tr><td><code>{@link #ViewGroup_android_tag ru.k3.desktopui:android_tag}</code></td><td></td></tr>
+           <tr><td><code>{@link #ViewGroup_android_visibility ru.k3.desktopui:android_visibility}</code></td><td></td></tr>
            </table>
-           @see #View_android_background
-           @see #View_android_clickable
-           @see #View_android_contentDescription
-           @see #View_android_drawingCacheQuality
-           @see #View_android_duplicateParentState
-           @see #View_android_fadeScrollbars
-           @see #View_android_fadingEdge
-           @see #View_android_fadingEdgeLength
-           @see #View_android_fitsSystemWindows
-           @see #View_android_focusable
-           @see #View_android_focusableInTouchMode
-           @see #View_android_hapticFeedbackEnabled
-           @see #View_android_id
-           @see #View_android_isScrollContainer
-           @see #View_android_keepScreenOn
-           @see #View_android_longClickable
-           @see #View_android_minHeight
-           @see #View_android_minWidth
-           @see #View_android_nextFocusDown
-           @see #View_android_nextFocusLeft
-           @see #View_android_nextFocusRight
-           @see #View_android_nextFocusUp
-           @see #View_android_onClick
-           @see #View_android_padding
-           @see #View_android_paddingBottom
-           @see #View_android_paddingLeft
-           @see #View_android_paddingRight
-           @see #View_android_paddingTop
-           @see #View_android_saveEnabled
-           @see #View_android_scrollX
-           @see #View_android_scrollY
-           @see #View_android_scrollbarAlwaysDrawHorizontalTrack
-           @see #View_android_scrollbarAlwaysDrawVerticalTrack
-           @see #View_android_scrollbarDefaultDelayBeforeFade
-           @see #View_android_scrollbarFadeDuration
-           @see #View_android_scrollbarSize
-           @see #View_android_scrollbarStyle
-           @see #View_android_scrollbarThumbHorizontal
-           @see #View_android_scrollbarThumbVertical
-           @see #View_android_scrollbarTrackHorizontal
-           @see #View_android_scrollbarTrackVertical
-           @see #View_android_scrollbars
-           @see #View_android_soundEffectsEnabled
-           @see #View_android_tag
-           @see #View_android_visibility
+           @see #ViewGroup_android_background
+           @see #ViewGroup_android_clickable
+           @see #ViewGroup_android_contentDescription
+           @see #ViewGroup_android_drawingCacheQuality
+           @see #ViewGroup_android_duplicateParentState
+           @see #ViewGroup_android_fadeScrollbars
+           @see #ViewGroup_android_fadingEdge
+           @see #ViewGroup_android_fadingEdgeLength
+           @see #ViewGroup_android_fitsSystemWindows
+           @see #ViewGroup_android_focusable
+           @see #ViewGroup_android_focusableInTouchMode
+           @see #ViewGroup_android_hapticFeedbackEnabled
+           @see #ViewGroup_android_id
+           @see #ViewGroup_android_isScrollContainer
+           @see #ViewGroup_android_keepScreenOn
+           @see #ViewGroup_android_longClickable
+           @see #ViewGroup_android_minHeight
+           @see #ViewGroup_android_minWidth
+           @see #ViewGroup_android_nextFocusDown
+           @see #ViewGroup_android_nextFocusLeft
+           @see #ViewGroup_android_nextFocusRight
+           @see #ViewGroup_android_nextFocusUp
+           @see #ViewGroup_android_onClick
+           @see #ViewGroup_android_padding
+           @see #ViewGroup_android_paddingBottom
+           @see #ViewGroup_android_paddingLeft
+           @see #ViewGroup_android_paddingRight
+           @see #ViewGroup_android_paddingTop
+           @see #ViewGroup_android_saveEnabled
+           @see #ViewGroup_android_scrollX
+           @see #ViewGroup_android_scrollY
+           @see #ViewGroup_android_scrollbarAlwaysDrawHorizontalTrack
+           @see #ViewGroup_android_scrollbarAlwaysDrawVerticalTrack
+           @see #ViewGroup_android_scrollbarDefaultDelayBeforeFade
+           @see #ViewGroup_android_scrollbarFadeDuration
+           @see #ViewGroup_android_scrollbarSize
+           @see #ViewGroup_android_scrollbarStyle
+           @see #ViewGroup_android_scrollbarThumbHorizontal
+           @see #ViewGroup_android_scrollbarThumbVertical
+           @see #ViewGroup_android_scrollbarTrackHorizontal
+           @see #ViewGroup_android_scrollbarTrackVertical
+           @see #ViewGroup_android_scrollbars
+           @see #ViewGroup_android_soundEffectsEnabled
+           @see #ViewGroup_android_tag
+           @see #ViewGroup_android_visibility
          */
-        public static final int[] View = {
+        public static final int[] ViewGroup = {
             0x01010063, 0x01010064, 0x01010065, 0x01010066,
             0x01010067, 0x01010068, 0x01010069, 0x0101007f,
             0x010100d0, 0x010100d1, 0x010100d2, 0x010100d3,
@@ -246,273 +248,273 @@ public final class R {
         };
         /**
           <p>This symbol is the offset where the {@link ru.k3.desktopui.R.attr#android_background}
-          attribute's value can be found in the {@link #View} array.
+          attribute's value can be found in the {@link #ViewGroup} array.
           @attr name android:android_background
         */
-        public static final int View_android_background = 12;
+        public static final int ViewGroup_android_background = 12;
         /**
           <p>This symbol is the offset where the {@link ru.k3.desktopui.R.attr#android_clickable}
-          attribute's value can be found in the {@link #View} array.
+          attribute's value can be found in the {@link #ViewGroup} array.
           @attr name android:android_clickable
         */
-        public static final int View_android_clickable = 29;
+        public static final int ViewGroup_android_clickable = 29;
         /**
           <p>This symbol is the offset where the {@link ru.k3.desktopui.R.attr#android_contentDescription}
-          attribute's value can be found in the {@link #View} array.
+          attribute's value can be found in the {@link #ViewGroup} array.
           @attr name android:android_contentDescription
         */
-        public static final int View_android_contentDescription = 41;
+        public static final int ViewGroup_android_contentDescription = 41;
         /**
           <p>This symbol is the offset where the {@link ru.k3.desktopui.R.attr#android_drawingCacheQuality}
-          attribute's value can be found in the {@link #View} array.
+          attribute's value can be found in the {@link #ViewGroup} array.
           @attr name android:android_drawingCacheQuality
         */
-        public static final int View_android_drawingCacheQuality = 32;
+        public static final int ViewGroup_android_drawingCacheQuality = 32;
         /**
           <p>This symbol is the offset where the {@link ru.k3.desktopui.R.attr#android_duplicateParentState}
-          attribute's value can be found in the {@link #View} array.
+          attribute's value can be found in the {@link #ViewGroup} array.
           @attr name android:android_duplicateParentState
         */
-        public static final int View_android_duplicateParentState = 33;
+        public static final int ViewGroup_android_duplicateParentState = 33;
         /**
           <p>This symbol is the offset where the {@link ru.k3.desktopui.R.attr#android_fadeScrollbars}
-          attribute's value can be found in the {@link #View} array.
+          attribute's value can be found in the {@link #ViewGroup} array.
           @attr name android:android_fadeScrollbars
         */
-        public static final int View_android_fadeScrollbars = 44;
+        public static final int ViewGroup_android_fadeScrollbars = 44;
         /**
           <p>This symbol is the offset where the {@link ru.k3.desktopui.R.attr#android_fadingEdge}
-          attribute's value can be found in the {@link #View} array.
+          attribute's value can be found in the {@link #ViewGroup} array.
           @attr name android:android_fadingEdge
         */
-        public static final int View_android_fadingEdge = 23;
+        public static final int ViewGroup_android_fadingEdge = 23;
         /**
           <p>This symbol is the offset where the {@link ru.k3.desktopui.R.attr#android_fadingEdgeLength}
-          attribute's value can be found in the {@link #View} array.
+          attribute's value can be found in the {@link #ViewGroup} array.
           @attr name android:android_fadingEdgeLength
         */
-        public static final int View_android_fadingEdgeLength = 24;
+        public static final int ViewGroup_android_fadingEdgeLength = 24;
         /**
           <p>This symbol is the offset where the {@link ru.k3.desktopui.R.attr#android_fitsSystemWindows}
-          attribute's value can be found in the {@link #View} array.
+          attribute's value can be found in the {@link #ViewGroup} array.
           @attr name android:android_fitsSystemWindows
         */
-        public static final int View_android_fitsSystemWindows = 21;
+        public static final int ViewGroup_android_fitsSystemWindows = 21;
         /**
           <p>This symbol is the offset where the {@link ru.k3.desktopui.R.attr#android_focusable}
-          attribute's value can be found in the {@link #View} array.
+          attribute's value can be found in the {@link #ViewGroup} array.
           @attr name android:android_focusable
         */
-        public static final int View_android_focusable = 18;
+        public static final int ViewGroup_android_focusable = 18;
         /**
           <p>This symbol is the offset where the {@link ru.k3.desktopui.R.attr#android_focusableInTouchMode}
-          attribute's value can be found in the {@link #View} array.
+          attribute's value can be found in the {@link #ViewGroup} array.
           @attr name android:android_focusableInTouchMode
         */
-        public static final int View_android_focusableInTouchMode = 19;
+        public static final int ViewGroup_android_focusableInTouchMode = 19;
         /**
           <p>This symbol is the offset where the {@link ru.k3.desktopui.R.attr#android_hapticFeedbackEnabled}
-          attribute's value can be found in the {@link #View} array.
+          attribute's value can be found in the {@link #ViewGroup} array.
           @attr name android:android_hapticFeedbackEnabled
         */
-        public static final int View_android_hapticFeedbackEnabled = 39;
+        public static final int ViewGroup_android_hapticFeedbackEnabled = 39;
         /**
           <p>This symbol is the offset where the {@link ru.k3.desktopui.R.attr#android_id}
-          attribute's value can be found in the {@link #View} array.
+          attribute's value can be found in the {@link #ViewGroup} array.
           @attr name android:android_id
         */
-        public static final int View_android_id = 8;
+        public static final int ViewGroup_android_id = 8;
         /**
           <p>This symbol is the offset where the {@link ru.k3.desktopui.R.attr#android_isScrollContainer}
-          attribute's value can be found in the {@link #View} array.
+          attribute's value can be found in the {@link #ViewGroup} array.
           @attr name android:android_isScrollContainer
         */
-        public static final int View_android_isScrollContainer = 38;
+        public static final int ViewGroup_android_isScrollContainer = 38;
         /**
           <p>This symbol is the offset where the {@link ru.k3.desktopui.R.attr#android_keepScreenOn}
-          attribute's value can be found in the {@link #View} array.
+          attribute's value can be found in the {@link #ViewGroup} array.
           @attr name android:android_keepScreenOn
         */
-        public static final int View_android_keepScreenOn = 37;
+        public static final int ViewGroup_android_keepScreenOn = 37;
         /**
           <p>This symbol is the offset where the {@link ru.k3.desktopui.R.attr#android_longClickable}
-          attribute's value can be found in the {@link #View} array.
+          attribute's value can be found in the {@link #ViewGroup} array.
           @attr name android:android_longClickable
         */
-        public static final int View_android_longClickable = 30;
+        public static final int ViewGroup_android_longClickable = 30;
         /**
           <p>This symbol is the offset where the {@link ru.k3.desktopui.R.attr#android_minHeight}
-          attribute's value can be found in the {@link #View} array.
+          attribute's value can be found in the {@link #ViewGroup} array.
           @attr name android:android_minHeight
         */
-        public static final int View_android_minHeight = 35;
+        public static final int ViewGroup_android_minHeight = 35;
         /**
           <p>This symbol is the offset where the {@link ru.k3.desktopui.R.attr#android_minWidth}
-          attribute's value can be found in the {@link #View} array.
+          attribute's value can be found in the {@link #ViewGroup} array.
           @attr name android:android_minWidth
         */
-        public static final int View_android_minWidth = 34;
+        public static final int ViewGroup_android_minWidth = 34;
         /**
           <p>This symbol is the offset where the {@link ru.k3.desktopui.R.attr#android_nextFocusDown}
-          attribute's value can be found in the {@link #View} array.
+          attribute's value can be found in the {@link #ViewGroup} array.
           @attr name android:android_nextFocusDown
         */
-        public static final int View_android_nextFocusDown = 28;
+        public static final int ViewGroup_android_nextFocusDown = 28;
         /**
           <p>This symbol is the offset where the {@link ru.k3.desktopui.R.attr#android_nextFocusLeft}
-          attribute's value can be found in the {@link #View} array.
+          attribute's value can be found in the {@link #ViewGroup} array.
           @attr name android:android_nextFocusLeft
         */
-        public static final int View_android_nextFocusLeft = 25;
+        public static final int ViewGroup_android_nextFocusLeft = 25;
         /**
           <p>This symbol is the offset where the {@link ru.k3.desktopui.R.attr#android_nextFocusRight}
-          attribute's value can be found in the {@link #View} array.
+          attribute's value can be found in the {@link #ViewGroup} array.
           @attr name android:android_nextFocusRight
         */
-        public static final int View_android_nextFocusRight = 26;
+        public static final int ViewGroup_android_nextFocusRight = 26;
         /**
           <p>This symbol is the offset where the {@link ru.k3.desktopui.R.attr#android_nextFocusUp}
-          attribute's value can be found in the {@link #View} array.
+          attribute's value can be found in the {@link #ViewGroup} array.
           @attr name android:android_nextFocusUp
         */
-        public static final int View_android_nextFocusUp = 27;
+        public static final int ViewGroup_android_nextFocusUp = 27;
         /**
           <p>This symbol is the offset where the {@link ru.k3.desktopui.R.attr#android_onClick}
-          attribute's value can be found in the {@link #View} array.
+          attribute's value can be found in the {@link #ViewGroup} array.
           @attr name android:android_onClick
         */
-        public static final int View_android_onClick = 40;
+        public static final int ViewGroup_android_onClick = 40;
         /**
           <p>This symbol is the offset where the {@link ru.k3.desktopui.R.attr#android_padding}
-          attribute's value can be found in the {@link #View} array.
+          attribute's value can be found in the {@link #ViewGroup} array.
           @attr name android:android_padding
         */
-        public static final int View_android_padding = 13;
+        public static final int ViewGroup_android_padding = 13;
         /**
           <p>This symbol is the offset where the {@link ru.k3.desktopui.R.attr#android_paddingBottom}
-          attribute's value can be found in the {@link #View} array.
+          attribute's value can be found in the {@link #ViewGroup} array.
           @attr name android:android_paddingBottom
         */
-        public static final int View_android_paddingBottom = 17;
+        public static final int ViewGroup_android_paddingBottom = 17;
         /**
           <p>This symbol is the offset where the {@link ru.k3.desktopui.R.attr#android_paddingLeft}
-          attribute's value can be found in the {@link #View} array.
+          attribute's value can be found in the {@link #ViewGroup} array.
           @attr name android:android_paddingLeft
         */
-        public static final int View_android_paddingLeft = 14;
+        public static final int ViewGroup_android_paddingLeft = 14;
         /**
           <p>This symbol is the offset where the {@link ru.k3.desktopui.R.attr#android_paddingRight}
-          attribute's value can be found in the {@link #View} array.
+          attribute's value can be found in the {@link #ViewGroup} array.
           @attr name android:android_paddingRight
         */
-        public static final int View_android_paddingRight = 16;
+        public static final int ViewGroup_android_paddingRight = 16;
         /**
           <p>This symbol is the offset where the {@link ru.k3.desktopui.R.attr#android_paddingTop}
-          attribute's value can be found in the {@link #View} array.
+          attribute's value can be found in the {@link #ViewGroup} array.
           @attr name android:android_paddingTop
         */
-        public static final int View_android_paddingTop = 15;
+        public static final int ViewGroup_android_paddingTop = 15;
         /**
           <p>This symbol is the offset where the {@link ru.k3.desktopui.R.attr#android_saveEnabled}
-          attribute's value can be found in the {@link #View} array.
+          attribute's value can be found in the {@link #ViewGroup} array.
           @attr name android:android_saveEnabled
         */
-        public static final int View_android_saveEnabled = 31;
+        public static final int ViewGroup_android_saveEnabled = 31;
         /**
           <p>This symbol is the offset where the {@link ru.k3.desktopui.R.attr#android_scrollX}
-          attribute's value can be found in the {@link #View} array.
+          attribute's value can be found in the {@link #ViewGroup} array.
           @attr name android:android_scrollX
         */
-        public static final int View_android_scrollX = 10;
+        public static final int ViewGroup_android_scrollX = 10;
         /**
           <p>This symbol is the offset where the {@link ru.k3.desktopui.R.attr#android_scrollY}
-          attribute's value can be found in the {@link #View} array.
+          attribute's value can be found in the {@link #ViewGroup} array.
           @attr name android:android_scrollY
         */
-        public static final int View_android_scrollY = 11;
+        public static final int ViewGroup_android_scrollY = 11;
         /**
           <p>This symbol is the offset where the {@link ru.k3.desktopui.R.attr#android_scrollbarAlwaysDrawHorizontalTrack}
-          attribute's value can be found in the {@link #View} array.
+          attribute's value can be found in the {@link #ViewGroup} array.
           @attr name android:android_scrollbarAlwaysDrawHorizontalTrack
         */
-        public static final int View_android_scrollbarAlwaysDrawHorizontalTrack = 5;
+        public static final int ViewGroup_android_scrollbarAlwaysDrawHorizontalTrack = 5;
         /**
           <p>This symbol is the offset where the {@link ru.k3.desktopui.R.attr#android_scrollbarAlwaysDrawVerticalTrack}
-          attribute's value can be found in the {@link #View} array.
+          attribute's value can be found in the {@link #ViewGroup} array.
           @attr name android:android_scrollbarAlwaysDrawVerticalTrack
         */
-        public static final int View_android_scrollbarAlwaysDrawVerticalTrack = 6;
+        public static final int ViewGroup_android_scrollbarAlwaysDrawVerticalTrack = 6;
         /**
           <p>This symbol is the offset where the {@link ru.k3.desktopui.R.attr#android_scrollbarDefaultDelayBeforeFade}
-          attribute's value can be found in the {@link #View} array.
+          attribute's value can be found in the {@link #ViewGroup} array.
           @attr name android:android_scrollbarDefaultDelayBeforeFade
         */
-        public static final int View_android_scrollbarDefaultDelayBeforeFade = 43;
+        public static final int ViewGroup_android_scrollbarDefaultDelayBeforeFade = 43;
         /**
           <p>This symbol is the offset where the {@link ru.k3.desktopui.R.attr#android_scrollbarFadeDuration}
-          attribute's value can be found in the {@link #View} array.
+          attribute's value can be found in the {@link #ViewGroup} array.
           @attr name android:android_scrollbarFadeDuration
         */
-        public static final int View_android_scrollbarFadeDuration = 42;
+        public static final int ViewGroup_android_scrollbarFadeDuration = 42;
         /**
           <p>This symbol is the offset where the {@link ru.k3.desktopui.R.attr#android_scrollbarSize}
-          attribute's value can be found in the {@link #View} array.
+          attribute's value can be found in the {@link #ViewGroup} array.
           @attr name android:android_scrollbarSize
         */
-        public static final int View_android_scrollbarSize = 0;
+        public static final int ViewGroup_android_scrollbarSize = 0;
         /**
           <p>This symbol is the offset where the {@link ru.k3.desktopui.R.attr#android_scrollbarStyle}
-          attribute's value can be found in the {@link #View} array.
+          attribute's value can be found in the {@link #ViewGroup} array.
           @attr name android:android_scrollbarStyle
         */
-        public static final int View_android_scrollbarStyle = 7;
+        public static final int ViewGroup_android_scrollbarStyle = 7;
         /**
           <p>This symbol is the offset where the {@link ru.k3.desktopui.R.attr#android_scrollbarThumbHorizontal}
-          attribute's value can be found in the {@link #View} array.
+          attribute's value can be found in the {@link #ViewGroup} array.
           @attr name android:android_scrollbarThumbHorizontal
         */
-        public static final int View_android_scrollbarThumbHorizontal = 1;
+        public static final int ViewGroup_android_scrollbarThumbHorizontal = 1;
         /**
           <p>This symbol is the offset where the {@link ru.k3.desktopui.R.attr#android_scrollbarThumbVertical}
-          attribute's value can be found in the {@link #View} array.
+          attribute's value can be found in the {@link #ViewGroup} array.
           @attr name android:android_scrollbarThumbVertical
         */
-        public static final int View_android_scrollbarThumbVertical = 2;
+        public static final int ViewGroup_android_scrollbarThumbVertical = 2;
         /**
           <p>This symbol is the offset where the {@link ru.k3.desktopui.R.attr#android_scrollbarTrackHorizontal}
-          attribute's value can be found in the {@link #View} array.
+          attribute's value can be found in the {@link #ViewGroup} array.
           @attr name android:android_scrollbarTrackHorizontal
         */
-        public static final int View_android_scrollbarTrackHorizontal = 3;
+        public static final int ViewGroup_android_scrollbarTrackHorizontal = 3;
         /**
           <p>This symbol is the offset where the {@link ru.k3.desktopui.R.attr#android_scrollbarTrackVertical}
-          attribute's value can be found in the {@link #View} array.
+          attribute's value can be found in the {@link #ViewGroup} array.
           @attr name android:android_scrollbarTrackVertical
         */
-        public static final int View_android_scrollbarTrackVertical = 4;
+        public static final int ViewGroup_android_scrollbarTrackVertical = 4;
         /**
           <p>This symbol is the offset where the {@link ru.k3.desktopui.R.attr#android_scrollbars}
-          attribute's value can be found in the {@link #View} array.
+          attribute's value can be found in the {@link #ViewGroup} array.
           @attr name android:android_scrollbars
         */
-        public static final int View_android_scrollbars = 22;
+        public static final int ViewGroup_android_scrollbars = 22;
         /**
           <p>This symbol is the offset where the {@link ru.k3.desktopui.R.attr#android_soundEffectsEnabled}
-          attribute's value can be found in the {@link #View} array.
+          attribute's value can be found in the {@link #ViewGroup} array.
           @attr name android:android_soundEffectsEnabled
         */
-        public static final int View_android_soundEffectsEnabled = 36;
+        public static final int ViewGroup_android_soundEffectsEnabled = 36;
         /**
           <p>This symbol is the offset where the {@link ru.k3.desktopui.R.attr#android_tag}
-          attribute's value can be found in the {@link #View} array.
+          attribute's value can be found in the {@link #ViewGroup} array.
           @attr name android:android_tag
         */
-        public static final int View_android_tag = 9;
+        public static final int ViewGroup_android_tag = 9;
         /**
           <p>This symbol is the offset where the {@link ru.k3.desktopui.R.attr#android_visibility}
-          attribute's value can be found in the {@link #View} array.
+          attribute's value can be found in the {@link #ViewGroup} array.
           @attr name android:android_visibility
         */
-        public static final int View_android_visibility = 20;
+        public static final int ViewGroup_android_visibility = 20;
     };
 }

@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/add"
 		android:icon="@android:drawable/ic_menu_add"
-		android:title="@string/add"
+		android:title="@string/test"
 		android:showAsAction="collapseActionView"/>
     <item android:id="@+id/wall"
 		android:icon="@android:drawable/ic_menu_gallery"

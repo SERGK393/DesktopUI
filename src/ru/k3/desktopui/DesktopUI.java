@@ -29,7 +29,6 @@ import android.preference.PreferenceManager;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.view.Display;
 import android.view.WindowManager;
-import android.appwidget.AppWidgetHost;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProviderInfo;
 
@@ -44,16 +43,16 @@ public class DesktopUI extends Activity implements DeskView.Events
 	private static boolean SIMPLEWALLCHANGE=false;//FIRSTLOAD=true;
 	private static int TOUCHX,TOUCHY,DEFX,DEFY,itposedit,wallmode;
 	
-	private static AsyncTask<DesktopUI, Void, Void> task;
+	private static AsyncTask<Void, Void, Void> task;
+	private static DesktopUI ths=null;
 
 //    private MainReceiver receiver;
 	private Cursor dbo;
 	private DeskView dv;
-	private WidgetSpace ws;
 	private ImageView wall;
 	
 	private int appwIdNow=0;
-	private AppWidgetHost appwHost;
+	private ObjWidgetHost appwHost;
 	private AppWidgetManager appwMan;
 	
 	class pref_resets{
@@ -70,7 +69,7 @@ public class DesktopUI extends Activity implements DeskView.Events
 	}
 	final finalclass finc=new finalclass();
 
-	private static final String[] itcontent=new String[]{DbManager._ID,DbManager.TYPE,DbManager.NAME,DbManager.PARAM_1,DbManager.PARAM_2,DbManager.PARAM_3, DbManager.POSX,DbManager.POSY};
+	public static final String[] itcontent=new String[]{DbManager._ID,DbManager.TYPE,DbManager.NAME,DbManager.PARAM_1,DbManager.PARAM_2,DbManager.PARAM_3, DbManager.POSX,DbManager.POSY};
 
     @Override
     public void onCreate(Bundle state)
@@ -80,6 +79,7 @@ public class DesktopUI extends Activity implements DeskView.Events
 			setTheme(R.style.Theme_Old_WithActionBar);
 		super.onCreate(state);
 		if(checkErrors())return;
+		ths=this;
 		Log.d(LOG_TAG,"-------STARTED-------");
 
 		registerMainReceiver();
@@ -87,17 +87,15 @@ public class DesktopUI extends Activity implements DeskView.Events
 //		setRequestedOrientation(Configuration.ORIENTATION_PORTRAIT);
 //		android.R.style
         setContentView(R.layout.main);
-		ws = (WidgetSpace)findViewById(R.id.widg);
         dv = (DeskView)findViewById(R.id.desk);
 		wall=(ImageView)findViewById(R.id.wall);
 		dv.setEvents(this);
-		dv.setWidgetSpace(ws);
 		checkWallpaper();
 		initDeskPosition();
 //		getWindow().setBackgroundDrawable(new Wallpaper(peekWallpaper()));
 		
 		appwMan = AppWidgetManager.getInstance(this);
-        appwHost = new AppWidgetHost(this, APPW_HOST_ID);
+        appwHost = new ObjWidgetHost(this, APPW_HOST_ID);
         appwHost.startListening();
 		
 //		mysett=getSQLCursor(DbProvider.URI_MSETT,scontent,null,null,null);
@@ -106,6 +104,9 @@ public class DesktopUI extends Activity implements DeskView.Events
 		PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
 		.registerOnSharedPreferenceChangeListener(preferenceChange);
     }
+	public static DesktopUI getInstance(){
+		return ths;
+	}
 	
 	@Override
 	public void onStart(){
@@ -118,7 +119,7 @@ public class DesktopUI extends Activity implements DeskView.Events
 	@Override
 	public void onPostResume(){
 		Log.d(LOG_TAG,"onPostResume");
-		Utilities.initStatics(this);
+		Utilities.initStatics();
 //		dv.postInvalidate();
 		applyPrefs();
 		if(wallmode==1&&SIMPLEWALLCHANGE)
@@ -174,6 +175,10 @@ public class DesktopUI extends Activity implements DeskView.Events
 	
 	private void registerMainReceiver(){
 		final IntentFilter intf=new IntentFilter(Intent.ACTION_EXTERNAL_APPLICATIONS_AVAILABLE);
+		intf.addAction(Intent.ACTION_PACKAGE_ADDED);
+		intf.addAction(Intent.ACTION_PACKAGE_CHANGED);
+		intf.addAction(Intent.ACTION_PACKAGE_REMOVED);
+		intf.addDataScheme("package");
 		registerReceiver(new MainReceiver(),intf);
 	}
 	
@@ -422,7 +427,7 @@ public class DesktopUI extends Activity implements DeskView.Events
 	public Cursor getCursorDBO(){
 		return dbo;
 	}
-	public AppWidgetHost getAppWidgetHost(){
+	public ObjWidgetHost getAppWidgetHost(){
 		return appwHost;
 	}
 	
@@ -606,7 +611,7 @@ public class DesktopUI extends Activity implements DeskView.Events
 				final Button b=(Button)d.findViewById(R.id.edit_save);
 				finc.d=d;
 				if(itposedit>=0){
-					dbo.moveToPosition(itposedit);
+					dbo.moveToPosition(finc.it.getDbId());
 					n.setText(dbo.getString(2));
 					p1.setText(dbo.getString(3));
 					p2.setText(dbo.getString(4));
@@ -625,7 +630,7 @@ public class DesktopUI extends Activity implements DeskView.Events
 									val.put(DbManager.PARAM_2,sp2);
 									getContentResolver().update(DbProvider.URI_OBJ,val,"_ID=" + dbo.getInt(0),null);
 									updateSQLCursor(DbProvider.URI_OBJ,itcontent);
-									dbo.moveToPosition(itposedit);
+									dbo.moveToPosition(finc.it.getDbId());
 									dv.editItem(itposedit,dbo.getInt(1),dbo.getString(2),dbo.getString(3),dbo.getString(4));
 									dv.correctTableSize();
 									dv.postInvalidate();
@@ -654,7 +659,7 @@ public class DesktopUI extends Activity implements DeskView.Events
 									getContentResolver().insert(DbProvider.URI_OBJ,val);
 									updateSQLCursor(DbProvider.URI_OBJ,itcontent);
 									dbo.moveToLast();
-									dv.addItem(dbo.getInt(1),dbo.getString(2),dbo.getString(3),dbo.getString(4),dbo.getInt(6),dbo.getInt(7));
+									dv.addItem(dbo.getPosition(),dbo.getInt(1),dbo.getString(2),dbo.getString(3),dbo.getString(4),dbo.getInt(6),dbo.getInt(7));
 									dv.correctTableSize();
 									dv.postInvalidate();
 								}
@@ -728,7 +733,7 @@ public class DesktopUI extends Activity implements DeskView.Events
         Bundle extras = data.getExtras();
         int appWidgetId = extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID, -1);
 
-        AppWidgetProviderInfo appWidgetInfo = appwMan.getAppWidgetInfo(appWidgetId);
+//        AppWidgetProviderInfo appWidgetInfo = appwMan.getAppWidgetInfo(appWidgetId);
 
 //        mModel.addItemToDatabase(this, launcherInfo,
 //                LauncherSettings.Favorites.CONTAINER_DESKTOP,
@@ -751,10 +756,28 @@ public class DesktopUI extends Activity implements DeskView.Events
 //            if(appWidgetInfo!=null)
 //            	appwidgetReadyBroadcast(appWidgetId, appWidgetInfo.provider);
 //        }
-		if(appwIdNow>0)appwHost.deleteAppWidgetId(appwIdNow);
-		appwIdNow=appWidgetId;
+			
+//		if(appwIdNow>0)appwHost.deleteAppWidgetId(appwIdNow);
+//		appwIdNow=appWidgetId;
+
+		ContentValues val=new ContentValues(5);
+		val.put(DbManager.TYPE,5);
+		val.put(DbManager.NAME,"appwidget");
+		val.put(DbManager.PARAM_1,String.valueOf(appWidgetId));
+		val.put(DbManager.POSX,dv.getScrollX());
+		val.put(DbManager.POSY,dv.getScrollY());
+		getContentResolver().insert(DbProvider.URI_OBJ,val);
+		updateSQLCursor(DbProvider.URI_OBJ,itcontent);
+		dbo.moveToLast();
+
+		int aid=Integer.parseInt(dbo.getString(3));
+		AppWidgetProviderInfo ainf=appwMan.getAppWidgetInfo(aid);
+		dv.addWidget(dbo.getPosition(),aid,ainf,dbo.getInt(6),dbo.getInt(7));
 		
-		dv.addWidget(appWidgetId,appWidgetInfo,50,60);
+		dv.correctTableSize();
+		dv.postInvalidate();
+		
+//		dv.addWidget(appWidgetId,appWidgetInfo,dbo.getInt(6),dbo.getInt(7));
 //		dv.addView(hostView);
 //		rootview.addView(hostView);
 //		dv.addWidget(appWidgetId,hostView,appWidgetInfo,50,160);
@@ -800,31 +823,74 @@ public class DesktopUI extends Activity implements DeskView.Events
 			}
 		};
 		hand.sendEmptyMessageDelayed(0,dbo.getCount()>1?0:800);
-*/		task=new AsyncTask<DesktopUI,Void,Void>(){
-			protected Void doInBackground(DesktopUI... d){
-				Cursor dbo=d[0].getCursorDBO();
-				DeskView dv=d[0].getDeskView();
+*/		task=new AsyncTask<Void,Void,Void>(){
+			protected Void doInBackground(Void... p){
+				DesktopUI d=DesktopUI.getInstance();
+				Cursor dbo=d.getCursorDBO();
+				DeskView dv=d.getDeskView();
 				
 				try{
 				if(dbo.getCount()<=1)TimeUnit.MILLISECONDS.sleep(800);
 				
 				dv.setDrawUnlock(false);
-				while(dbo.moveToNext())
-					dv.addItem(dbo.getInt(1),dbo.getString(2),dbo.getString(3),dbo.getString(4),dbo.getInt(6),dbo.getInt(7));
-
-				dv.setDrawUnlock(true);
+				while(dbo.moveToNext()){
+					if(dbo.getInt(1)==1)
+					dv.addItem(dbo.getPosition(),dbo.getInt(1),dbo.getString(2),dbo.getString(3),dbo.getString(4),dbo.getInt(6),dbo.getInt(7));
+				}
+				
 				dbo.moveToFirst();
 				dv.correctTableSize();
-				dv.postInvalidate();
-				Log.d(LOG_TAG,"accurate load complete");
+				
+				Log.d(LOG_TAG,"accurate load objects complete");
 //				MessageBox("Load Complete",3000);
 				}catch (InterruptedException e){
 					e.printStackTrace();
 				}
 				return null;
 			}
+			
+			protected void onPostExecute(Void p){
+				super.onPostExecute(p);
+				DesktopUI d=DesktopUI.getInstance();
+				Cursor dbo=d.getCursorDBO();
+				DeskView dv=d.getDeskView();
+				AppWidgetManager aman=AppWidgetManager.getInstance(d);
+
+				try{
+					dv.setDrawUnlock(false);
+					int aid;
+					AppWidgetProviderInfo ainf;
+					while(dbo.moveToNext()){
+						if(dbo.getInt(1)==5){
+							aid=Integer.parseInt(dbo.getString(3));
+							ainf=aman.getAppWidgetInfo(aid);
+							if(ainf!=null)dv.addWidget(dbo.getPosition(),aid,ainf,dbo.getInt(6),dbo.getInt(7));
+							else{
+								d.getContentResolver().delete(DbProvider.URI_OBJ,"_ID=" + dbo.getInt(0),null);
+								d.updateSQLCursor(DbProvider.URI_OBJ,d.itcontent);
+//								dbo.moveToLast();
+//								dv.deleteItem(finc.it);
+//								dv.correctTableSize();
+//								dv.postInvalidate();
+								d.accurateLoadObj();
+								return;
+							}
+						}
+					}
+
+					dv.setDrawUnlock(true);
+					dbo.moveToFirst();
+					dv.correctTableSize();
+					dv.postInvalidate();
+					Log.d(LOG_TAG,"accurate load widgets complete");
+//				MessageBox("Load Complete",3000);
+				}catch (Exception e){
+					Log.e(LOG_TAG,"ERROR ON APPWIDGET:"+e.toString());
+					e.printStackTrace();
+				}
+			}
 		};
-		task.execute(this);
+		task.execute();
     }
 /*	
 	private void forceLoadObj(){
@@ -840,11 +906,11 @@ public class DesktopUI extends Activity implements DeskView.Events
 		MessageBox("Load Complete",3000);
 	}
 */
-	private void start(int pos,Obj it,boolean need){
+	private void start(Obj it,boolean need){
 		if(it.isClicked()||need){
 		    try
 		    {
-			    dbo.moveToPosition(pos);
+			    dbo.moveToPosition(it.getDbId());
 				Intent start=it.run();
 				if(start!=null){
 				    startActivity(start);
@@ -861,15 +927,15 @@ public class DesktopUI extends Activity implements DeskView.Events
 		}
 	}
 	private void start(finalclass en){
-		start(en.pos,en.it,true);
+		start(en.it,true);
 	}
 	
-	public void onClick(int pos,Obj it)
+	public void onClick(Obj it)
 	{
 		if (!it.isMoved())
-			start(pos,it,false);
+			start(it,false);
 		else{
-			dbo.moveToPosition(pos);
+			dbo.moveToPosition(it.getDbId());
 			it.setMoving(false);
 			dv.postInvalidate();
 			ContentValues val=new ContentValues(2);
@@ -877,7 +943,7 @@ public class DesktopUI extends Activity implements DeskView.Events
 			val.put(DbManager.POSY,it.getYPos());
 			getContentResolver().update(DbProvider.URI_OBJ,val,"_ID=" + dbo.getInt(0),null);
 			updateSQLCursor(DbProvider.URI_OBJ,itcontent);
-			dbo.moveToPosition(pos);
+			dbo.moveToPosition(it.getDbId());
 			dv.correctTableSize();
 		}
 	}
@@ -885,9 +951,11 @@ public class DesktopUI extends Activity implements DeskView.Events
 	public void onLongClick(int pos,Obj it,int x,int y){
 //		MessageBox("touch x=" + x + "\ntouch y=" + y, 5000);
 		TOUCHX=x; TOUCHY=y;
+		finc.it=it;
+		finc.pos=pos;
 		
 		if (it != null){
-			dbo.moveToPosition(pos);
+			dbo.moveToPosition(it.getDbId());
 			if (it.isClicked()){
 				it.setClicked(false);
 				it.setMoving(true);
@@ -897,8 +965,6 @@ public class DesktopUI extends Activity implements DeskView.Events
 			}
 
 			final PopupElement pop;
-			finc.it=it;
-			finc.pos=pos;
 			if(Utilities.isNewPopup(Utilities.POP_CONTEXT2,dv)){
 				pop=Utilities.getPopupList(Utilities.POP_CONTEXT2);
 				String[]strs=getResources().getStringArray(R.array.context_menu);
@@ -921,7 +987,8 @@ public class DesktopUI extends Activity implements DeskView.Events
 								getContentResolver().delete(DbProvider.URI_OBJ,"_ID=" + dbo.getInt(0),null);
 								updateSQLCursor(DbProvider.URI_OBJ,itcontent);
 								dbo.moveToLast();
-								dv.deleteItem(finc.it);
+								dv.deleteItem(finc.pos);
+								finc.pos=0;
 								dv.correctTableSize();
 								dv.postInvalidate();
 							    break;
@@ -967,6 +1034,7 @@ public class DesktopUI extends Activity implements DeskView.Events
 											ResolveInfo inf=apps.get(pos);
 											Intent start=new Intent(Intent.ACTION_MAIN);
 											start.setClassName(inf.activityInfo.packageName,inf.activityInfo.name);
+											start.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
 											startActivity(start);
 											apps.clear();
 											pop1.dismiss();
@@ -998,8 +1066,9 @@ public class DesktopUI extends Activity implements DeskView.Events
 		}
 	}
 	public int getItemPos(){
-		int pos=dbo.getPosition();
-		return (dbo.getCount()>pos)?pos:-1;
+//		int pos=dbo.getPosition();
+//		return (dbo.getCount()>pos)?pos:-1;
+		return finc.pos;
 	}
 	
 }

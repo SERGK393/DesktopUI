@@ -11,16 +11,16 @@
 		android:textSize="16dp"
 		android:textColor="#F00"
 		android:text="@string/error_info"/>
+
 	<EditText
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:minHeight="60dp"
-		android:maxHeight="150dp"
-		android:singleLine="false"
-		android:background="#000"
-		android:textColor="#FFF"
-		android:inputType="text"
-		android:id="@+id/error_text"/>
+	    android:id="@+id/error_text"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:background="#000"
+	    android:minLines="2"
+	    android:maxLines="5"
+	    android:singleLine="false"
+	    android:textColor="#FFF" />
 	<LinearLayout
 		android:layout_width="fill_parent"
 		android:layout_height="fill_parent"

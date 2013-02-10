@@ -17,7 +17,6 @@
 package ru.k3.desktopui;
 
 import java.lang.ref.Reference;
-import java.lang.ref.SoftReference;
 import java.util.HashMap;
 
 import android.annotation.SuppressLint;
@@ -25,7 +24,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.content.res.Resources;
@@ -46,16 +44,18 @@ public class IconCache {
 	
 	private static class CacheEntry {
         public Bitmap icon;
-		public Reference<Bitmap> ref;
+//		public Reference<Bitmap> ref;
 //		public Bitmap small;
     }
 	private static class AsyncEntry{
-		AsyncEntry(CacheEntry e,ComponentName c){
+		AsyncEntry(CacheEntry e,ComponentName c,ObjItem it){
 			this.e=e;
 			this.c=c;
+			this.it=it;
 		}
 		CacheEntry e;
 		ComponentName c;
+		ObjItem it;
 	}
 
     private Bitmap mDefaultIcon;
@@ -65,7 +65,7 @@ public class IconCache {
     private final HashMap<ComponentName, CacheEntry> mCache =
             new HashMap<ComponentName, CacheEntry>(INITIAL_ICON_CACHE_CAPACITY);
 	
-	private boolean res_icon;
+	private boolean res_icon,ic_unuse;
 	private int res_density;
 	
 	public static IconCache getInstance(Context c){
@@ -83,6 +83,7 @@ public class IconCache {
 		DesktopUI d=(DesktopUI)mContext;
 		res_icon=d.getPrefBool(R.string.pref_icres);
 		res_density=d.getPrefInt(R.string.pref_icdensity);
+		ic_unuse=d.getPrefBool(R.string.pref_icunuse);
         mDefaultIcon = makeDefaultIcon(mContext);
 	}
 
@@ -98,12 +99,13 @@ public class IconCache {
         return Utilities.createIconBitmap(mPackageManager.getDefaultActivityIcon(),c);
     }
 	
-	public void clearDefaultIcons(){
+	public void clearDefaultIcons(boolean yes){
 		Iterator<ComponentName> it=mCache.keySet().iterator();
 		while(it.hasNext()){
 			Log.i(LOG_TAG,"Iterator.hasNext()");
 			CacheEntry e=mCache.get(it.next());
 			if(isDefaultIcon((e.icon)))e.icon=null;
+			else if(!yes)e.icon=null;
 		}
 	}
 
@@ -139,14 +141,14 @@ public class IconCache {
         en.icon = icon;
     }
 
-    public Bitmap getIcon(ComponentName component) {
+    public Bitmap getIcon(ComponentName component, ObjItem it) {
         synchronized (mCache) {
         	CacheEntry en=mCache.get(component);
             if (component == null||en==null||en.icon == null) {
 	            if (component == null) {
 	                return mDefaultIcon;
 	            }
-	            return cacheLocked(component).icon;
+	            return cacheLocked(component,it).icon;
             } else {
 	            return en.icon;
             }
@@ -165,7 +167,7 @@ public class IconCache {
 			d=res.getDrawableForDensity(icId,res_density);
 			else d=res.getDrawable(icId);
 		}catch(Resources.NotFoundException e){
-			d=mPackageManager.getDefaultActivityIcon();
+			d=null;
 		}
 		
 		return d;
@@ -201,7 +203,7 @@ public class IconCache {
 		return null;
 	}
 
-    private CacheEntry cacheLocked(ComponentName componentName) {
+    private CacheEntry cacheLocked(ComponentName componentName, ObjItem it) {
     	CacheEntry en=mCache.get(componentName);
     	if (en == null) {
             en = new CacheEntry();
@@ -212,7 +214,7 @@ public class IconCache {
             try
 			{
 				en.icon = mDefaultIcon;
-				new LoadIcon().execute(new AsyncEntry(en,componentName));
+				new LoadIcon().execute(new AsyncEntry(en,componentName,it));
 //				en.icon = Utilities.createIconBitmap(getActivityIcon(componentName), mContext);
 				if(en.icon==null || en.icon.isRecycled()) throw new Exception();
 			}
@@ -233,7 +235,10 @@ public class IconCache {
 		{
 			Log.d(LOG_TAG,"AsyncTask started: ae[0]="+ae[0]);
 			ae[0].e.icon = Utilities.createIconBitmap(getActivityIcon(ae[0].c), mContext);
-			if(ae[0].e.icon==null) ae[0].e.icon=mDefaultIcon;
+			if(ae[0].e.icon==null){
+				ae[0].e.icon=mDefaultIcon;
+				ae[0].it.setEnabled(ic_unuse);
+			}else ae[0].it.setEnabled(true);
 			Utilities.invalidate();
 			Log.d(LOG_TAG,"AsyncTask ended: ae[0]="+ae[0]+
 			              " ae[0].e.icon="+ae[0].e.icon);

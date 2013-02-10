@@ -13,10 +13,13 @@ public interface Obj{
 	public boolean contains(Rect r);
 	public Intent run();
 	
+	public Obj setDbId(int dbId);
 	public void setPos(int x,int y);
+	public void setEnabled(boolean e);
 	public void setClicked(boolean cl);
 	public void setMoving(boolean mv);
 	
+	public int getDbId();
 	public int getXPos();
 	public int getYPos();
 	public int getAbsoluteX2();
@@ -25,6 +28,8 @@ public interface Obj{
 	public String getPackage();
 	public ComponentName getComponentName();
 	
+	public boolean isWidget();
+	public boolean isEnabled();
 	public boolean isClicked();
 	public boolean isMoved();
 	public boolean ismov();

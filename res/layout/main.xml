@@ -12,9 +12,5 @@
 		android:id="@+id/desk"
 		android:layout_width="fill_parent"
 		android:layout_height="fill_parent"/>
-	<ru.k3.desktopui.WidgetSpace
-		android:id="@+id/widg"
-		android:layout_width="fill_parent"
-		android:layout_height="fill_parent"/>
 </FrameLayout>
     

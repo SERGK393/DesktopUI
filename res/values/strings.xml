@@ -11,6 +11,7 @@
     <string name="apps">Приложения</string>
     <string name="sett">Настройки</string>
     <string name="restart">Перезапуск</string>
+    <string name="test">Тест</string>
 		
 	<string name="mysett">Параметры DesktopUI</string>
     <string name="sett_all">Все настройки</string>
@@ -28,6 +29,7 @@
 	<string name="mst_fntsize">Размер шрифта</string>
 	<string name="mst_bmp_quality">Высокое качество</string>
 	<string name="mst_res_icons">Брать другие иконки</string>
+	<string name="mst_unusable_icons">Неиспользуемые иконки</string>
 	<string name="mst_res_icons_density">Плотность иконок</string>
 	<string name="mst_reset">Сбросить всё</string>
 	<string name="mst_scr_scroll">Настройки прокрутки</string>
@@ -44,6 +46,7 @@
 	<string name="pref_is">icons_iconsize</string>
 	<string name="pref_fs">icons_fontsize</string>
 	<string name="pref_icres">icons_icresource</string>
+	<string name="pref_icunuse">icons_icunusable</string>
 	<string name="pref_icdensity">icons_icdensity</string>
 	<string name="pref_bq">icons_bmpquality</string>
 	<string name="pref_scroll_category">scroll_</string>

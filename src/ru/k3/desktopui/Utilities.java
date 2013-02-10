@@ -64,7 +64,7 @@ public final class Utilities {
     public static Bitmap createIconBitmap(Drawable icon, Context context) {
 		if(icon==null)return null;
         synchronized (sCanvas) { // we share the statics :-(
-            if (sIconSize==-1&&quality==null) initStatics(context);
+            if (sIconSize==-1&&quality==null) initStatics();
 			if (sIconSize==-1&&quality==null) return null;
 
             int width = sIconSize;
@@ -83,8 +83,8 @@ public final class Utilities {
         }
     }
 
-    public static void initStatics(Context context) {
-		if(desk==null)desk=(DesktopUI)context;
+    public static void initStatics() {
+		if(desk==null)desk=DesktopUI.getInstance();
 		if(dv==null)dv=(DeskView)(desk.findViewById(R.id.desk));
 		if(man==null)man=desk.getPackageManager();
         sIconSize=desk.getPrefInt(R.string.pref_is);
@@ -269,6 +269,7 @@ public final class Utilities {
 		sh.putString(res.getString(R.string.pref_icdensity),"320");
 		sh.putString(res.getString(R.string.pref_wall),"2");
 		sh.putBoolean(res.getString(R.string.pref_oldtheme),false);
+		sh.putBoolean(res.getString(R.string.pref_icunuse),true);
 		
 		sh.putInt(res.getString(R.string.prefex_defx),0);
 		sh.putInt(res.getString(R.string.prefex_defy),0);
